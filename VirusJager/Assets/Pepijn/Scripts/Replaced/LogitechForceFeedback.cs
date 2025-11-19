@@ -21,28 +21,57 @@ public class LogitechForceFeedback : MonoBehaviour
     [DllImport("LogitechSteeringWheelEnginesWrapper")]
     private static extern void LogiStopSpringForce(int index);
 
-    void Start()
+    private bool initialized = false;
+    private bool springActive = false;
+
+    void OnEnable()
     {
-        LogiSteeringInitialize(false);
+        // Initialize once per play session
+        initialized = LogiSteeringInitialize(false);
+        Debug.Log("Logitech init: " + initialized);
     }
 
     void Update()
     {
+        if (!initialized)
+            return;
+
         LogiUpdate();
 
         if (LogiIsConnected(0))
         {
-            // Voorbeeld: lichte weerstand rond middenstand
-            int offset = 0;
-            int saturation = 50;
-            int coefficient = 50;
-            LogiPlaySpringForce(0, offset, saturation, coefficient);
+            // Start spring *once*
+            if (!springActive)
+            {
+                LogiPlaySpringForce(0, 0, 50, 50);
+                springActive = true;
+            }
+        }
+        else
+        {
+            // If disconnected, stop spring safely
+            if (springActive)
+            {
+                LogiStopSpringForce(0);
+                springActive = false;
+            }
         }
     }
 
-    void OnApplicationQuit()
+    void OnDisable()
     {
-        LogiStopSpringForce(0);
-        LogiSteeringShutdown();
+        Debug.Log("Logitech shutting down...");
+
+        if (initialized)
+        {
+            if (springActive)
+            {
+                LogiStopSpringForce(0);
+                springActive = false;
+            }
+
+            LogiSteeringShutdown();
+            initialized = false;
+        }
     }
 }
