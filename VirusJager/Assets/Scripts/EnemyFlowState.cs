@@ -18,8 +18,8 @@ public class EnemyFlowState : IEnemyState
         if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Player hit virus!");
+            ScoreManager.Instance.AddScore(10);
             //add oxygen 
-            //add score 
 
             _fsm.ChangeState(_fsm.dieState);
         }
