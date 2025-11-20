@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2521939813797917313
+--- !u!1001 &4284576263311766784
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 798f761da1ebc5a4082d896eaf148198, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.19
+      value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 798f761da1ebc5a4082d896eaf148198, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.28
+      value: -3.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 798f761da1ebc5a4082d896eaf148198, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.015
+      value: 4.77
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 798f761da1ebc5a4082d896eaf148198, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4d5068a77802a454ca815ee3085abb34, type: 2}
     - target: {fileID: 919132149155446097, guid: 798f761da1ebc5a4082d896eaf148198, type: 3}
       propertyPath: m_Name
-      value: '6.1 bloedcell 3 '
+      value: 'PF_ bloedcell 3 '
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
