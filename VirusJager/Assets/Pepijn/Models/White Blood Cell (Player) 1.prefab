@@ -1,0 +1,208 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4606770096451205331
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 15.878241
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.6284375
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.778844
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      propertyPath: m_Name
+      value: White Blood Cell (Player) 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1477567650992169881}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5593976165931965308}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5945010735504620006}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5808997619013824090}
+  m_SourcePrefab: {fileID: 100100000, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+--- !u!1 &3688414213376607618 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dd33fe71abf85e741bcac1976d0aea48, type: 3}
+  m_PrefabInstance: {fileID: 4606770096451205331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1477567650992169881
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688414213376607618}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5593976165931965308
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688414213376607618}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &5945010735504620006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688414213376607618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1352cd66941a2364798d6e9be5c841f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  springOffset: 0
+  springSaturation: 50
+  springCoefficient: 50
+  vibrationStrength: 80
+  triggerTag: Obstacle
+--- !u!114 &5808997619013824090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3688414213376607618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de74d94a6a479164596b7372d71b8a77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseSpeed: 20
+  boostSpeed: 100000
+  boostAcceleration: 10
+  steeringAngle: 45
+  steerAction:
+    m_Name: Steer
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2cf72b52-a4d7-49e2-b1a7-efb221604d87
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f7dbef92-4a93-4b47-b69c-64713130d95c
+      m_Path: <Joystick>/stick/x
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Steer
+      m_Flags: 0
+    m_Flags: 0
+  throttleAction:
+    m_Name: Throttle
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 9d4fdfff-1b55-4952-9253-9b31c5e9d0f7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 119fcd01-ed62-4e56-bf39-e5408a80f046
+      m_Path: <HID::Logitech G29 Driving Force Racing Wheel>/z
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Throttle
+      m_Flags: 0
+    m_Flags: 0
+  brakeAction:
+    m_Name: Brake
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b088de3f-c598-43f8-9a80-651ee3c52d87
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: de9c103c-4b44-4525-be3f-f3c65e0bc545
+      m_Path: <HID::Logitech G29 Driving Force Racing Wheel>/rz
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Brake
+      m_Flags: 0
+    m_Flags: 0
