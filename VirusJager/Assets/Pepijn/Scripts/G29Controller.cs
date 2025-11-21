@@ -18,11 +18,15 @@ public class G29Controller : MonoBehaviour
     public Image fuelFillImage;
 
     [Header("Fuel Gauge Arc Settings")]
-    public float minFill = 0.15f; // fill amount when empty
-    public float maxFill = 0.85f; // fill amount when full
+    public float minFill = 0.15f;
+    public float maxFill = 0.85f;
+
+    [Header("UI Manager")]
+    public UIManager uiManager;
 
     private float currentFuel;
     private float currentBoost = 0f;
+    private float currentBaseSpeed; // <-- IMPORTANT
     private float steerValue;
     private float throttleValue;
 
@@ -44,6 +48,7 @@ public class G29Controller : MonoBehaviour
     void Start()
     {
         currentFuel = maxFuel;
+        currentBaseSpeed = baseSpeed;
 
         if (fuelSlider != null)
             fuelSlider.maxValue = maxFuel;
@@ -51,20 +56,17 @@ public class G29Controller : MonoBehaviour
 
     void Update()
     {
-        // -------------------------------------
+        // ---------------------------
         // INPUT
-        // -------------------------------------
+        // ---------------------------
         steerValue = steerAction.ReadValue<float>();
         float rawThrottle = throttleAction.ReadValue<float>();
         throttleValue = Mathf.Clamp01((1f - rawThrottle) / 2f);
 
-        // -------------------------------------
-        // BOOST CALCULATION
-        // -------------------------------------
-        float targetBoost = throttleValue * boostSpeed;
-
-        if (currentFuel <= 0f)
-            targetBoost = 0f; // no boost when out of fuel
+        // ---------------------------
+        // BOOST
+        // ---------------------------
+        float targetBoost = (currentFuel > 0f) ? throttleValue * boostSpeed : 0f;
 
         currentBoost = Mathf.MoveTowards(
             currentBoost,
@@ -72,28 +74,29 @@ public class G29Controller : MonoBehaviour
             boostAcceleration * Time.deltaTime
         );
 
-        // -------------------------------------
-        // SPEED CONTROL
-        // -------------------------------------
-        float effectiveBaseSpeed = baseSpeed;
-
-        if (currentFuel <= 0f)
+        // ---------------------------
+        // BASE SPEED REDUCTION WHEN EMPTY
+        // ---------------------------
+        if (currentFuel > 0f)
         {
-            // smoothly reduce base speed to 0 when out of fuel
-            effectiveBaseSpeed = Mathf.MoveTowards(effectiveBaseSpeed, 0, 2f * Time.deltaTime);
+            currentBaseSpeed = baseSpeed;
+        }
+        else
+        {
+            currentBaseSpeed = Mathf.MoveTowards(currentBaseSpeed, 0, 2f * Time.deltaTime);
         }
 
-        float finalSpeed = effectiveBaseSpeed + currentBoost;
+        float finalSpeed = currentBaseSpeed + currentBoost;
 
-        // -------------------------------------
+        // ---------------------------
         // MOVEMENT
-        // -------------------------------------
+        // ---------------------------
         transform.Translate(Vector3.forward * finalSpeed * Time.deltaTime);
         transform.Rotate(Vector3.up, steerValue * steeringAngle * Time.deltaTime);
 
-        // -------------------------------------
+        // ---------------------------
         // FUEL DRAIN
-        // -------------------------------------
+        // ---------------------------
         if (finalSpeed > 0.1f && currentFuel > 0f)
         {
             float drain = fuelDrainNormal;
@@ -105,22 +108,28 @@ public class G29Controller : MonoBehaviour
             currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
         }
 
-        // -------------------------------------
-        // UPDATE UI
-        // -------------------------------------
+        // ---------------------------
+        // UI UPDATE
+        // ---------------------------
         if (fuelSlider != null)
             fuelSlider.value = currentFuel;
 
         if (fuelFillImage != null)
         {
             float fuelPercent = currentFuel / maxFuel;
-
-            // map 0–1 fuel to minFill–maxFill arc
             float mappedFill = Mathf.Lerp(minFill, maxFill, fuelPercent);
-
             fuelFillImage.fillAmount = mappedFill;
         }
 
-        Debug.Log($"Fuel: {currentFuel:F1}, Speed: {finalSpeed:F2}");
+        // ---------------------------
+        // GAME OVER CHECK
+        // ---------------------------
+        if (finalSpeed <= 0.01f && currentFuel <= 0f)
+        {
+            if (uiManager != null)
+                uiManager.ShowGameOver();
+        }
+
+        Debug.Log($"Fuel: {currentFuel:F1}, Final Speed: {finalSpeed:F2}, Base Speed: {currentBaseSpeed:F2}");
     }
 }
