@@ -12,9 +12,6 @@ public interface IEnemyState
 
 public class EnemnyFSM : MonoBehaviour
 {
-    [Header("Flow Path")]
-    public Transform[] flowPath; // Assign transforms along the blood vessel in the inspector
-
     [HideInInspector] public IEnemyState currentState;
 
     // References for states
@@ -67,4 +64,12 @@ public class EnemnyFSM : MonoBehaviour
             ChangeState(dieState);
         }
     }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (currentState is EnemyFlowState flowState)
+        {
+            flowState.OnPlayerHit(collision);
+        }
+    }
+
 }

@@ -12,7 +12,6 @@ public class EnemyDieState : IEnemyState
         if (!executed)
         {
             executed = true;
-            enemy.agent.isStopped = true;
             enemy.animator.SetTrigger("Die");
             Object.Destroy(enemy.gameObject, 3f); // Delay to finish animation
         }
