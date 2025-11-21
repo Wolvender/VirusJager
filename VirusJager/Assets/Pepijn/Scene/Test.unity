@@ -152,9 +152,6 @@ MonoBehaviour:
   firstSelectedButton: {fileID: 576062947}
   steerAction: {fileID: -9107197797439701941, guid: da15445c16d983841821b59d355c7599, type: 3}
   submitAction: {fileID: -2488727750435525672, guid: da15445c16d983841821b59d355c7599, type: 3}
-  eventSystem: {fileID: 0}
-  isGameOver: 0
-  lastSteer: 0
 --- !u!4 &572917228
 Transform:
   m_ObjectHideFlags: 0
@@ -679,6 +676,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 320871023773609409, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5db9801ce14fe9343b4ba7a961ae7039, type: 2}
     - target: {fileID: 3830764575105684195, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
