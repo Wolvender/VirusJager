@@ -74,15 +74,6 @@
             "id": "73e47e3b-d8fa-4ee9-aa6e-dae86aaf0b00",
             "actions": [
                 {
-                    "name": "Steer",
-                    "type": "Value",
-                    "id": "abe5f953-8611-4b73-a016-5c11b14d11a4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Submit",
                     "type": "Button",
                     "id": "041a1243-9dd9-46c5-a863-ac73de20f1bf",
@@ -90,20 +81,27 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Down",
+                    "type": "Button",
+                    "id": "0739805e-28ff-4937-9333-0f92338962bf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Up",
+                    "type": "Button",
+                    "id": "f74aca84-6fa9-47ee-82b7-faa968d8872b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "d1905786-b634-48b3-b600-2c9f13c46886",
-                    "path": "<Joystick>/stick/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Steer",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "459bfa28-ac3b-4ac3-aafe-a40e8b01b2f1",
@@ -112,6 +110,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e36502f-6301-4640-a1d6-ec18905fbfcd",
+                    "path": "<HID::Logitech G29 Driving Force Racing Wheel>/button5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e2df671-8a9e-4857-a080-d7d0b2d4a573",
+                    "path": "<HID::Logitech G29 Driving Force Racing Wheel>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

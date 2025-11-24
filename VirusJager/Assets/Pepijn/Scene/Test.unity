@@ -680,10 +680,26 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 5db9801ce14fe9343b4ba7a961ae7039, type: 2}
+    - target: {fileID: 464675985718910186, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977564393375737075, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 572917227}
+    - target: {fileID: 2750141472157970883, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3830764575105684195, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 572917227}
+    - target: {fileID: 4889198693935594112, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7541903807770586897, guid: ad0302dbb3f4ff44a9425557b2ecb8d7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

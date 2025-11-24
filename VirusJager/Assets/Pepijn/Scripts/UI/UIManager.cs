@@ -11,22 +11,26 @@ public class UIManager : MonoBehaviour
     public Button firstSelectedButton;
 
     [Header("Input Actions")]
-    public InputActionReference steerAction;   // G29 horizontal axis
-    public InputActionReference submitAction;  // G29 submit button
+    public InputActionReference uiUpAction;
+    public InputActionReference uiDownAction;
+    public InputActionReference submitAction;
 
     private EventSystem eventSystem;
     private bool isGameOver = false;
-    private float lastSteer = 0f;
+
+    public ScreenFader fader;
 
     void OnEnable()
     {
-        steerAction.action.Enable();
+        uiUpAction.action.Enable();
+        uiDownAction.action.Enable();
         submitAction.action.Enable();
     }
 
     void OnDisable()
     {
-        steerAction.action.Disable();
+        uiUpAction.action.Disable();
+        uiDownAction.action.Disable();
         submitAction.action.Disable();
     }
 
@@ -42,17 +46,19 @@ public class UIManager : MonoBehaviour
     {
         if (!isGameOver) return;
 
-        float steer = steerAction.action.ReadValue<float>();
+        // Navigate: UP
+        if (uiUpAction.action.triggered)
+        {
+            MoveSelection(-1);
+        }
 
-        // Navigate UI when steer moves significantly
-        if (steer > 0.5f && lastSteer <= 0.5f)
-            MoveSelection(1); // right/down
-        else if (steer < -0.5f && lastSteer >= -0.5f)
-            MoveSelection(-1); // left/up
+        // Navigate: DOWN
+        if (uiDownAction.action.triggered)
+        {
+            MoveSelection(1);
+        }
 
-        lastSteer = steer;
-
-        // Submit button
+        // Submit / Enter
         if (submitAction.action.triggered)
         {
             if (eventSystem.currentSelectedGameObject != null)
@@ -69,26 +75,26 @@ public class UIManager : MonoBehaviour
 
         isGameOver = true;
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
-
-        // Set the first selected button
+        gameOverPanel.SetActive(true);
         eventSystem.SetSelectedGameObject(firstSelectedButton.gameObject);
 
-        Time.timeScale = 0f; // pause game
+        Time.timeScale = 0f;
     }
 
     private void MoveSelection(int direction)
     {
-        if (eventSystem.currentSelectedGameObject == null) return;
-
         Button[] buttons = gameOverPanel.GetComponentsInChildren<Button>();
-        int index = System.Array.IndexOf(buttons, eventSystem.currentSelectedGameObject.GetComponent<Button>());
-        if (index == -1) return;
+        if (buttons.Length == 0) return;
+
+        GameObject current = eventSystem.currentSelectedGameObject;
+        int index = System.Array.IndexOf(buttons, current?.GetComponent<Button>());
+
+        if (index < 0) index = 0;
 
         index += direction;
+
         if (index < 0) index = buttons.Length - 1;
-        else if (index >= buttons.Length) index = 0;
+        if (index >= buttons.Length) index = 0;
 
         eventSystem.SetSelectedGameObject(buttons[index].gameObject);
     }
@@ -102,6 +108,6 @@ public class UIManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // Replace with your main menu scene
+        SceneManager.LoadScene("MainMenu");
     }
 }
