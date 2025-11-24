@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,10 +16,11 @@ public class UIManager : MonoBehaviour
     public InputActionReference uiDownAction;
     public InputActionReference submitAction;
 
+    [Header("Fade")]
+    public ScreenFader fader;   // Assign your fade canvas object
+
     private EventSystem eventSystem;
     private bool isGameOver = false;
-
-    public ScreenFader fader;
 
     void OnEnable()
     {
@@ -46,19 +48,19 @@ public class UIManager : MonoBehaviour
     {
         if (!isGameOver) return;
 
-        // Navigate: UP
+        // Navigate UP
         if (uiUpAction.action.triggered)
         {
             MoveSelection(-1);
         }
 
-        // Navigate: DOWN
+        // Navigate DOWN
         if (uiDownAction.action.triggered)
         {
             MoveSelection(1);
         }
 
-        // Submit / Enter
+        // Submit button pressed
         if (submitAction.action.triggered)
         {
             if (eventSystem.currentSelectedGameObject != null)
@@ -69,25 +71,40 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // --- GAME OVER LOGIC ---
     public void ShowGameOver()
     {
         if (isGameOver) return;
-
         isGameOver = true;
 
-        gameOverPanel.SetActive(true);
-        eventSystem.SetSelectedGameObject(firstSelectedButton.gameObject);
-
-        Time.timeScale = 0f;
+        StartCoroutine(GameOverRoutine());
     }
 
+    private IEnumerator GameOverRoutine()
+    {
+        // Pause the whole game
+        Time.timeScale = 0f;
+
+        // Fade to black first
+        if (fader != null)
+            Debug.Log("fades");
+            yield return StartCoroutine(fader.FadeToBlack(0.8f));
+
+    // Now show your world-space Game Over UI
+    gameOverPanel.SetActive(true);
+
+        // Select the first button
+        eventSystem.SetSelectedGameObject(firstSelectedButton.gameObject);
+    }
+
+    // --- UI NAVIGATION ---
     private void MoveSelection(int direction)
     {
         Button[] buttons = gameOverPanel.GetComponentsInChildren<Button>();
         if (buttons.Length == 0) return;
 
-        GameObject current = eventSystem.currentSelectedGameObject;
-        int index = System.Array.IndexOf(buttons, current?.GetComponent<Button>());
+        GameObject selectedGO = eventSystem.currentSelectedGameObject;
+        int index = System.Array.IndexOf(buttons, selectedGO?.GetComponent<Button>());
 
         if (index < 0) index = 0;
 
@@ -99,6 +116,7 @@ public class UIManager : MonoBehaviour
         eventSystem.SetSelectedGameObject(buttons[index].gameObject);
     }
 
+    // --- BUTTON CALLBACKS ---
     public void TryAgain()
     {
         Time.timeScale = 1f;
