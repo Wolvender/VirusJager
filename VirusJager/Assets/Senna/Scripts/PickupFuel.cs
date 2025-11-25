@@ -2,23 +2,21 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
-    public float boostAmount = 10f;
-    public float boostDuration = 5f;
+    public float fuel = 10f;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("boost: " + boostAmount);
             G29Controller controller = other.GetComponent<G29Controller>();
 
             if (controller != null)
             {
-                controller.ApplyTemporaryBoost(boostAmount, boostDuration);
-                
+                controller.AddFuel(fuel);
+                Debug.Log("Fuel added: " + fuel);
             }
 
-            Destroy(gameObject); // remove pickup
+            Destroy(gameObject);
         }
     }
 }

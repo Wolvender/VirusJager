@@ -139,4 +139,11 @@ public class G29Controller : MonoBehaviour
         baseSpeed = originalBaseSpeed; // restore
     }
 
+    public void AddFuel(float amount)
+    {
+        currentFuel += amount;
+        currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
+    }
+
+
 }
