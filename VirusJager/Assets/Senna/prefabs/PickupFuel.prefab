@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2280707086777525249}
   - component: {fileID: 2491813748037895069}
-  - component: {fileID: 8660224662067824730}
   - component: {fileID: 5055796957461797112}
   - component: {fileID: 5245656820967809997}
+  - component: {fileID: 3089173521101314257}
   m_Layer: 0
   m_Name: PickupFuel
   m_TagString: Untagged
@@ -43,20 +43,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4599211319898618754}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &8660224662067824730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4599211319898618754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a132a97436ef6c409bf7cc1d0621ad7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boostAmount: 10
-  boostDuration: 5
 --- !u!23 &5055796957461797112
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -123,3 +109,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3089173521101314257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4599211319898618754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9062dfd28d376984692bd8c5b816683f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fuel: 10
