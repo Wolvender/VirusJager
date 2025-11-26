@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7442006787197990263}
   - component: {fileID: 4657750022587908541}
   - component: {fileID: -3292517687207844241}
+  - component: {fileID: -1403634004304789909}
   m_Layer: 0
   m_Name: lichte bogje 1
   m_TagString: Untagged
@@ -109,3 +110,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5776304262230742001, guid: 7b280eef87b5a094d993785fe24b6698, type: 3}
+--- !u!114 &-1403634004304789909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6603221016842084456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc63cea0e2bc2d24ea8f84142ef578b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectors: 
