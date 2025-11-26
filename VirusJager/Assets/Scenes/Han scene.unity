@@ -470,6 +470,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 415550974932002065, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 654910bf138e76640956252b8d497425, type: 2}
     - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.7947657
@@ -514,6 +518,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: White Blood Cell (Player)
       objectReference: {fileID: 0}
+    - target: {fileID: 1507802443921624462, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 45415b7ed100a3445bd9cf111ce2d905, type: 2}
+    - target: {fileID: 1832054128665649063, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 299bdb15985b86c44a5446b4711a453c, type: 2}
+    - target: {fileID: 2008488246368775598, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2deeaaedbd5dac443b3a60600767c5f7, type: 2}
+    - target: {fileID: 2449819732814877691, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 654910bf138e76640956252b8d497425, type: 2}
+    - target: {fileID: 5975011402963131223, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 654910bf138e76640956252b8d497425, type: 2}
+    - target: {fileID: 6260336755207988185, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9919272a7a8da3a44be9a93e7356aa57, type: 2}
+    - target: {fileID: 8420376793586506377, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 45415b7ed100a3445bd9cf111ce2d905, type: 2}
+    - target: {fileID: 8622993216150950337, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4d00e5b10a8f9b341a9e358190878b9c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
