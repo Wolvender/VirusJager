@@ -5,53 +5,47 @@ using UnityEngine.UI;
 public class G29Controller : MonoBehaviour
 {
     [Header("Car Settings")]
-    public float baseSpeed = 5f;
-    public float boostSpeed = 15f;
-    public float boostAcceleration = 10f;
+    public float acceleration = 12f;
+    public float deceleration = 8f;
+    public float brakeForce = 45f;
+    public float maxSpeed = 20f;
     public float steeringAngle = 45f;
 
-    [Header("Fuel Settings")]
-    public float maxFuel = 100f;
-    public float fuelDrainNormal = 2f;
-    public float fuelDrainBoost = 8f;
-    public Slider fuelSlider;
-    public Image fuelFillImage;
+    [Header("UI Bar Settings")]
+    public Image fuelFillImage;            // The UI arc
+    public float minFill = 0.15f;          // Min arc fill
+    public float maxFill = 0.85f;          // Max arc fill
+    public float progressSpeed = 5f;       // Speed of 100 → 0 decrease
 
-    [Header("Fuel Gauge Arc Settings")]
-    public float minFill = 0.15f;
-    public float maxFill = 0.85f;
+    private float fakeValue = 100f;        // Value for UI arc (100 → 0)
+
+    [Header("Tracked Variable")]
+    public float vruchtbaar = 100f;        // Also counts 100 → 0 and stops
 
     [Header("UI Manager")]
     public UIManager uiManager;
 
-    private float currentFuel;
-    private float currentBoost = 0f;
-    private float currentBaseSpeed; // <-- IMPORTANT
+    private float currentSpeed = 0f;
     private float steerValue;
     private float throttleValue;
+    private float brakeValue;
 
     public InputAction steerAction;
     public InputAction throttleAction;
+    public InputAction brakeAction;
 
     void OnEnable()
     {
         steerAction.Enable();
         throttleAction.Enable();
+        brakeAction.Enable();
     }
 
     void OnDisable()
     {
         steerAction.Disable();
         throttleAction.Disable();
-    }
-
-    void Start()
-    {
-        currentFuel = maxFuel;
-        currentBaseSpeed = baseSpeed;
-
-        if (fuelSlider != null)
-            fuelSlider.maxValue = maxFuel;
+        brakeAction.Disable();
     }
 
     void Update()
@@ -60,76 +54,62 @@ public class G29Controller : MonoBehaviour
         // INPUT
         // ---------------------------
         steerValue = steerAction.ReadValue<float>();
+
         float rawThrottle = throttleAction.ReadValue<float>();
         throttleValue = Mathf.Clamp01((1f - rawThrottle) / 2f);
 
-        // ---------------------------
-        // BOOST
-        // ---------------------------
-        float targetBoost = (currentFuel > 0f) ? throttleValue * boostSpeed : 0f;
-
-        currentBoost = Mathf.MoveTowards(
-            currentBoost,
-            targetBoost,
-            boostAcceleration * Time.deltaTime
-        );
+        float rawBrake = brakeAction.ReadValue<float>();
+        brakeValue = Mathf.Clamp01((1f - rawBrake) / 2f);
 
         // ---------------------------
-        // BASE SPEED REDUCTION WHEN EMPTY
+        // SPEED LOGIC
         // ---------------------------
-        if (currentFuel > 0f)
-        {
-            currentBaseSpeed = baseSpeed;
-        }
+        if (throttleValue > 0f)
+            currentSpeed += throttleValue * acceleration * Time.deltaTime;
         else
-        {
-            currentBaseSpeed = Mathf.MoveTowards(currentBaseSpeed, 0, 2f * Time.deltaTime);
-        }
+            currentSpeed -= deceleration * Time.deltaTime;
 
-        float finalSpeed = currentBaseSpeed + currentBoost;
+        if (brakeValue > 0f)
+            currentSpeed -= brakeValue * brakeForce * Time.deltaTime;
+
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
 
         // ---------------------------
         // MOVEMENT
         // ---------------------------
-        transform.Translate(Vector3.forward * finalSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
         transform.Rotate(Vector3.up, steerValue * steeringAngle * Time.deltaTime);
 
         // ---------------------------
-        // FUEL DRAIN
+        // UI ARC: slow 100 → 0
         // ---------------------------
-        if (finalSpeed > 0.1f && currentFuel > 0f)
+        if (fakeValue > 0f)
         {
-            float drain = fuelDrainNormal;
+            fakeValue -= progressSpeed * Time.deltaTime;
 
-            float boostPercent = currentBoost / boostSpeed;
-            drain += boostPercent * fuelDrainBoost;
-
-            currentFuel -= drain * Time.deltaTime;
-            currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
+            if (fakeValue < 0f)
+                fakeValue = 0f;
         }
 
-        // ---------------------------
-        // UI UPDATE
-        // ---------------------------
-        if (fuelSlider != null)
-            fuelSlider.value = currentFuel;
+        float percent = fakeValue / 100f;
+        float mappedFill = Mathf.Lerp(minFill, maxFill, percent);
 
         if (fuelFillImage != null)
-        {
-            float fuelPercent = currentFuel / maxFuel;
-            float mappedFill = Mathf.Lerp(minFill, maxFill, fuelPercent);
             fuelFillImage.fillAmount = mappedFill;
-        }
 
         // ---------------------------
-        // GAME OVER CHECK
+        // Vruchtbaar: also 100 → 0 (NO reset)
         // ---------------------------
-        if (finalSpeed <= 0.01f && currentFuel <= 0f)
+        if (vruchtbaar > 0f)
         {
-            if (uiManager != null)
-                uiManager.ShowGameOver();
+            vruchtbaar -= progressSpeed * Time.deltaTime;
+
+            if (vruchtbaar < 0f)
+                vruchtbaar = 0f;
         }
 
-        Debug.Log($"Fuel: {currentFuel:F1}, Final Speed: {finalSpeed:F2}, Base Speed: {currentBaseSpeed:F2}");
+        Debug.Log(
+            $"Speed: {currentSpeed:F2}, Vruchtbaar: {vruchtbaar:F1}, ArcVal: {fakeValue:F1}, Fill: {mappedFill:F2}"
+        );
     }
 }
