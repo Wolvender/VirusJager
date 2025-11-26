@@ -10,17 +10,18 @@ public class G29Controller : MonoBehaviour
     public float brakeForce = 45f;
     public float maxSpeed = 20f;
     public float steeringAngle = 45f;
+    public float CurrentSpeed => currentSpeed;
 
     [Header("UI Bar Settings")]
-    public Image fuelFillImage;            // The UI arc
-    public float minFill = 0.15f;          // Min arc fill
-    public float maxFill = 0.85f;          // Max arc fill
-    public float progressSpeed = 5f;       // Speed of 100 → 0 decrease
+    public Image fuelFillImage;         
+    public float minFill = 0.15f;          
+    public float maxFill = 0.85f;       
+    public float progressSpeed = 5f;  
 
-    private float fakeValue = 100f;        // Value for UI arc (100 → 0)
+    private float fakeValue = 100f; 
 
     [Header("Tracked Variable")]
-    public float vruchtbaar = 100f;        // Also counts 100 → 0 and stops
+    public float vruchtbaar = 100f;     
 
     [Header("UI Manager")]
     public UIManager uiManager;
