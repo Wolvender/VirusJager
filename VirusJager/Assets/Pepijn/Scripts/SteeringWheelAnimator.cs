@@ -42,13 +42,13 @@
         switch (axis)
         {
             case RotationAxis.X:
-                rot = Quaternion.Euler(-rotationAmount, 0, 0);
+                rot = Quaternion.Euler(rotationAmount, 0, 0);
                 break;
             case RotationAxis.Y:
-                rot = Quaternion.Euler(0, -rotationAmount, 0);
+                rot = Quaternion.Euler(0, rotationAmount, 0);
                 break;
             case RotationAxis.Z:
-                rot = Quaternion.Euler(0, 0, -rotationAmount);
+                rot = Quaternion.Euler(0, 0, rotationAmount);
                 break;
         }
 
