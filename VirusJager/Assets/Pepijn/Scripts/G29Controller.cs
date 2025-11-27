@@ -123,4 +123,27 @@ public class G29Controller : MonoBehaviour
 
         Debug.Log($"Fuel: {currentFuel:F1}, Speed: {finalSpeed:F2}");
     }
+
+    public void ApplyTemporaryBoost(float amount, float duration)
+    {
+        StartCoroutine(TemporaryBoostRoutine(amount, duration));
+    }
+
+    private System.Collections.IEnumerator TemporaryBoostRoutine(float amount, float duration)
+    {
+        float originalBaseSpeed = baseSpeed;
+
+        baseSpeed += amount;  // apply boost
+        yield return new WaitForSeconds(duration);
+
+        baseSpeed = originalBaseSpeed; // restore
+    }
+
+    public void AddFuel(float amount)
+    {
+        currentFuel += amount;
+        currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
+    }
+
+
 }
