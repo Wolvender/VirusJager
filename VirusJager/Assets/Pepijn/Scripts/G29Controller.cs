@@ -5,122 +5,112 @@ using UnityEngine.UI;
 public class G29Controller : MonoBehaviour
 {
     [Header("Car Settings")]
-    public float baseSpeed = 5f;
-    public float boostSpeed = 15f;
-    public float boostAcceleration = 10f;
+    public float acceleration = 12f;
+    public float deceleration = 8f;
+    public float brakeForce = 45f;
+    public float maxSpeed = 20f;
     public float steeringAngle = 45f;
+    public float CurrentSpeed => currentSpeed;
 
-    [Header("Fuel Settings")]
-    public float maxFuel = 100f;
-    public float fuelDrainNormal = 2f;
-    public float fuelDrainBoost = 8f;
-    public Slider fuelSlider;
-    public Image fuelFillImage;
+    [Header("UI Bar Settings")]
+    public Image fuelFillImage;         
+    public float minFill = 0.15f;          
+    public float maxFill = 0.85f;       
+    public float progressSpeed = 5f;  
 
-    [Header("Fuel Gauge Arc Settings")]
-    public float minFill = 0.15f; // fill amount when empty
-    public float maxFill = 0.85f; // fill amount when full
+    private float fakeValue = 100f; 
 
-    private float currentFuel;
-    private float currentBoost = 0f;
+    [Header("Tracked Variable")]
+    public float vruchtbaar = 100f;     
+
+    [Header("UI Manager")]
+    public UIManager uiManager;
+
+    private float currentSpeed = 0f;
     private float steerValue;
     private float throttleValue;
+    private float brakeValue;
 
     public InputAction steerAction;
     public InputAction throttleAction;
+    public InputAction brakeAction;
 
     void OnEnable()
     {
         steerAction.Enable();
         throttleAction.Enable();
+        brakeAction.Enable();
     }
 
     void OnDisable()
     {
         steerAction.Disable();
         throttleAction.Disable();
-    }
-
-    void Start()
-    {
-        currentFuel = maxFuel;
-
-        if (fuelSlider != null)
-            fuelSlider.maxValue = maxFuel;
+        brakeAction.Disable();
     }
 
     void Update()
     {
-        // -------------------------------------
+        // ---------------------------
         // INPUT
-        // -------------------------------------
+        // ---------------------------
         steerValue = steerAction.ReadValue<float>();
+
         float rawThrottle = throttleAction.ReadValue<float>();
         throttleValue = Mathf.Clamp01((1f - rawThrottle) / 2f);
 
-        // -------------------------------------
-        // BOOST CALCULATION
-        // -------------------------------------
-        float targetBoost = throttleValue * boostSpeed;
+        float rawBrake = brakeAction.ReadValue<float>();
+        brakeValue = Mathf.Clamp01((1f - rawBrake) / 2f);
 
-        if (currentFuel <= 0f)
-            targetBoost = 0f; // no boost when out of fuel
+        // ---------------------------
+        // SPEED LOGIC
+        // ---------------------------
+        if (throttleValue > 0f)
+            currentSpeed += throttleValue * acceleration * Time.deltaTime;
+        else
+            currentSpeed -= deceleration * Time.deltaTime;
 
-        currentBoost = Mathf.MoveTowards(
-            currentBoost,
-            targetBoost,
-            boostAcceleration * Time.deltaTime
-        );
+        if (brakeValue > 0f)
+            currentSpeed -= brakeValue * brakeForce * Time.deltaTime;
 
-        // -------------------------------------
-        // SPEED CONTROL
-        // -------------------------------------
-        float effectiveBaseSpeed = baseSpeed;
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
 
-        if (currentFuel <= 0f)
-        {
-            // smoothly reduce base speed to 0 when out of fuel
-            effectiveBaseSpeed = Mathf.MoveTowards(effectiveBaseSpeed, 0, 2f * Time.deltaTime);
-        }
-
-        float finalSpeed = effectiveBaseSpeed + currentBoost;
-
-        // -------------------------------------
+        // ---------------------------
         // MOVEMENT
-        // -------------------------------------
-        transform.Translate(Vector3.forward * finalSpeed * Time.deltaTime);
+        // ---------------------------
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
         transform.Rotate(Vector3.up, steerValue * steeringAngle * Time.deltaTime);
 
-        // -------------------------------------
-        // FUEL DRAIN
-        // -------------------------------------
-        if (finalSpeed > 0.1f && currentFuel > 0f)
+        // ---------------------------
+        // UI ARC: slow 100 → 0
+        // ---------------------------
+        if (fakeValue > 0f)
         {
-            float drain = fuelDrainNormal;
+            fakeValue -= progressSpeed * Time.deltaTime;
 
-            float boostPercent = currentBoost / boostSpeed;
-            drain += boostPercent * fuelDrainBoost;
-
-            currentFuel -= drain * Time.deltaTime;
-            currentFuel = Mathf.Clamp(currentFuel, 0f, maxFuel);
+            if (fakeValue < 0f)
+                fakeValue = 0f;
         }
 
-        // -------------------------------------
-        // UPDATE UI
-        // -------------------------------------
-        if (fuelSlider != null)
-            fuelSlider.value = currentFuel;
+        float percent = fakeValue / 100f;
+        float mappedFill = Mathf.Lerp(minFill, maxFill, percent);
 
         if (fuelFillImage != null)
-        {
-            float fuelPercent = currentFuel / maxFuel;
-
-            // map 0–1 fuel to minFill–maxFill arc
-            float mappedFill = Mathf.Lerp(minFill, maxFill, fuelPercent);
-
             fuelFillImage.fillAmount = mappedFill;
+
+        // ---------------------------
+        // Vruchtbaar: also 100 → 0 (NO reset)
+        // ---------------------------
+        if (vruchtbaar > 0f)
+        {
+            vruchtbaar -= progressSpeed * Time.deltaTime;
+
+            if (vruchtbaar < 0f)
+                vruchtbaar = 0f;
         }
 
-        Debug.Log($"Fuel: {currentFuel:F1}, Speed: {finalSpeed:F2}");
+        Debug.Log(
+            $"Speed: {currentSpeed:F2}, Vruchtbaar: {vruchtbaar:F1}, ArcVal: {fakeValue:F1}, Fill: {mappedFill:F2}"
+        );
     }
 }
