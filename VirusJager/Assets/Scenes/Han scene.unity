@@ -119,6 +119,63 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &46492924
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.17934
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -12.2562065
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.775433
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 488388695038927176, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 976377606778452978, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: m_Name
+      value: White Blood Cell (Player) (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
 --- !u!1001 &941891196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -514,6 +571,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 519068621248623732, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 55fd86121c3a65d4ca0830e5cf63bb05, type: 2}
     - target: {fileID: 976377606778452978, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
       propertyPath: m_Name
       value: White Blood Cell (Player)
@@ -538,6 +599,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 654910bf138e76640956252b8d497425, type: 2}
+    - target: {fileID: 6221052829533569364, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 42ee03b34556a74439bbe949f93ce916, type: 2}
     - target: {fileID: 6260336755207988185, guid: 50e471be859021e448acfa674ca3aa7c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -564,3 +629,4 @@ SceneRoots:
   - {fileID: 941891196}
   - {fileID: 1769707098}
   - {fileID: 2386415711566392083}
+  - {fileID: 46492924}
