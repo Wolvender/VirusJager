@@ -65,6 +65,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8745790448028936956}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4662301054893673789}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073755625579571698}
   m_SourcePrefab: {fileID: 100100000, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
 --- !u!1 &8871579539952765991 stripped
 GameObject:
@@ -106,8 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endPoint: {fileID: 0}
-  minSpeed: 5
-  maxSpeed: 10
+  minSpeed: 10
+  maxSpeed: 12
   turnMultiplier: 1
   raycastDistance: 1
   groundLayer:
@@ -116,8 +122,8 @@ MonoBehaviour:
   tiltSmoothing: 8
   lookAheadDistance: 8
   turnThresholdAngle: 45
-  turnSpeedMultiplier: 0.7
-  straightSpeedMultiplier: 1.3
+  turnSpeedMultiplier: 0.824
+  straightSpeedMultiplier: 1.668
 --- !u!95 &8745790448028936956
 Animator:
   serializedVersion: 7
@@ -140,3 +146,45 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!135 &4662301054893673789
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871579539952765991}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.9
+  m_Center: {x: -5.35, y: 0, z: 2.06}
+--- !u!65 &1073755625579571698
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871579539952765991}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 2.5076294}
+  m_Center: {x: -5.36, y: 0, z: -0.7538147}

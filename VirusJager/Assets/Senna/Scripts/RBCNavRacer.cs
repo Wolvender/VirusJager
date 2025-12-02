@@ -47,8 +47,20 @@ public class RBCNavRacer : MonoBehaviour
         agent.stoppingDistance = 0.1f;
 
         if (endPoint != null)
-            agent.SetDestination(endPoint.position);
+        {
+            // SMALL RANDOM OFFSET SO THEY DONT FOLLOW THE SAME LINE
+            Vector3 randomOffset = new Vector3(
+                Random.Range(-1.5f, 1.5f),
+                0f,
+                Random.Range(-1.5f, 1.5f)
+            );
+
+            Vector3 randomizedEndPos = endPoint.position + randomOffset;
+
+            agent.SetDestination(randomizedEndPos);
+        }
     }
+
 
     void Update()
     {
