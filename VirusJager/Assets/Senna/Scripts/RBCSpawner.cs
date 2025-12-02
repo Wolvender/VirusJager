@@ -1,20 +1,19 @@
 using UnityEngine;
 
-public class RBCSpawner : MonoBehaviour
+public class EnemyActivator : MonoBehaviour
 {
-    public GameObject rbcPrefab;       // RBC prefab with RBCMovement attached
-    public Transform waypointFolder;    // Same folder for the prefab to follow
-    public float spawnInterval = 1.5f;  // Time between spawning RBCs
+    public Transform enemyFolder; // Parent that contains all enemies
 
     void Start()
     {
-        InvokeRepeating(nameof(SpawnRBC), 0f, spawnInterval);
+        ActivateEnemies();
     }
 
-    void SpawnRBC()
+    void ActivateEnemies()
     {
-        GameObject newRBC = Instantiate(rbcPrefab, waypointFolder.GetChild(0).position, Quaternion.identity);
-        RBCMovement movement = newRBC.GetComponent<RBCMovement>();
-        movement.waypointFolder = waypointFolder;
+        foreach (Transform child in enemyFolder)
+        {
+            child.gameObject.SetActive(true);
+        }
     }
 }
