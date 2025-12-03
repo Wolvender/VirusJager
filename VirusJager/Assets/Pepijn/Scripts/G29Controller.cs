@@ -54,11 +54,19 @@ public class G29Controller : MonoBehaviour
         // INPUT
         // ---------------------------
         steerValue = steerAction.ReadValue<float>();
-
         float rawThrottle = throttleAction.ReadValue<float>();
-        throttleValue = Mathf.Clamp01((1f - rawThrottle) / 2f);
-
         float rawBrake = brakeAction.ReadValue<float>();
+
+        // --- Keyboard fallback for testing ---
+        if (Keyboard.current != null)
+        {
+            if (Keyboard.current.wKey.isPressed) rawThrottle = -1f; // W → full forward
+            if (Keyboard.current.sKey.isPressed) rawBrake = -1f;    // S → full brake
+            if (Keyboard.current.aKey.isPressed) steerValue = -1f;  // A → left
+            if (Keyboard.current.dKey.isPressed) steerValue = 1f;   // D → right
+        }
+
+        throttleValue = Mathf.Clamp01((1f - rawThrottle) / 2f);
         brakeValue = Mathf.Clamp01((1f - rawBrake) / 2f);
 
         // ---------------------------
