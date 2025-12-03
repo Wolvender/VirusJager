@@ -1,39 +1,37 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class RBCNavRacer : MonoBehaviour
 {
-    public Transform endPoint;
+    [Header("=== FINISH ===")]
+    public Transform endPoint;                   // Drag your finish here (one per racer or shared)
 
-    [Header("Speed")]
-    public float minSpeed = 2f;
-    public float maxSpeed = 5f;
+    [Header("=== SPEED ===")]
+    public float minSpeed = 10f;
+    public float maxSpeed = 18f;
 
-    [Header("Rotation")]
-    public float turnMultiplier = 1f;
-
-    [Header("Slope Following")]
-    public float raycastDistance = 1f;
+    [Header("=== HANDLING ===")]
+    public float turnMultiplier = 6f;
+    public float raycastDistance = 2f;
     public LayerMask groundLayer = 1;
-    public float tiltSmoothing = 8f;
+    public float tiltSmoothing = 12f;
 
-    // === NEW: Smart Speed Regulation ===
-    [Header("Smart Speed (Straights vs Turns)")]
-    [Tooltip("How far ahead the racer looks to see if there's a turn coming")]
-    public float lookAheadDistance = 8f;
+    [Header("=== CHAOS & MISTAKES ===")]
+    [Range(0f, 1f)] public float mistakeChance = 0.3f;
+    public float mistakeDuration = 1.2f;
+    public float wobbleAmount = 3f;
 
-    [Tooltip("At what angle (degrees) the racer starts slowing down (30-60 typical)")]
-    public float turnThresholdAngle = 45f;
-
-    [Tooltip("How much slower in sharp turns (0.6 = 60% of normal speed)")]
-    [Range(0.4f, 1f)] public float turnSpeedMultiplier = 0.7f;
-
-    [Tooltip("How much faster on long straights (1.3 = +30% speed)")]
-    [Range(1f, 1.8f)] public float straightSpeedMultiplier = 1.3f;
-
+    // ──────────────────────
     private NavMeshAgent agent;
     private float baseSpeed;
     private Vector3 smoothedUp = Vector3.up;
+    private static List<float> usedSpeeds = new List<float>();
+
+    private float mistakeTimer = 0f;
+    private bool isMistakeActive = false;
+    private Vector3 mistakeOffset = Vector3.zero;
 
     void Start()
     {
@@ -41,111 +39,106 @@ public class RBCNavRacer : MonoBehaviour
         agent.updateRotation = false;
         agent.angularSpeed = 0f;
 
-        baseSpeed = Random.Range(minSpeed, maxSpeed);
-        agent.speed = baseSpeed;
-        agent.acceleration = baseSpeed * 2f;
-        agent.stoppingDistance = 0.1f;
+        // THIS IS THE MAGIC: They follow the path but still smash into each other
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+        agent.avoidancePriority = Random.Range(1, 99);
+        agent.autoBraking = false;
+        agent.stoppingDistance = 0f;
 
+        baseSpeed = GetUniqueSpeed(minSpeed, maxSpeed);
+        agent.speed = baseSpeed;
+        agent.acceleration = baseSpeed * 4f;
+
+        // MAIN GOAL: Go to endPoint, but with random offset so they don't all take the exact same path
         if (endPoint != null)
         {
-            // SMALL RANDOM OFFSET SO THEY DONT FOLLOW THE SAME LINE
-            Vector3 randomOffset = new Vector3(
-                Random.Range(-1.5f, 1.5f),
-                0f,
-                Random.Range(-1.5f, 1.5f)
+            Vector3 finalDest = endPoint.position + new Vector3(
+                Random.Range(-4f, 4f),
+                0,
+                Random.Range(-4f, 4f)
             );
-
-            Vector3 randomizedEndPos = endPoint.position + randomOffset;
-
-            agent.SetDestination(randomizedEndPos);
+            agent.SetDestination(finalDest);
         }
     }
 
-
     void Update()
     {
-        // This runs every frame and adjusts speed based on upcoming path
-        AdjustSpeedBasedOnPath();
+        HandleMistakes();
+
+        // Every few seconds, slightly nudge the destination to create overtaking and chaos
+        if (Random.value < 0.02f && endPoint != null)
+        {
+            Vector3 chaoticDest = endPoint.position + new Vector3(
+                Random.Range(-5f, 5f),
+                0,
+                Random.Range(-5f, 5f)
+            ) + mistakeOffset;
+
+            agent.SetDestination(chaoticDest);
+        }
     }
 
     void LateUpdate()
     {
-        if (agent.velocity.magnitude > 0.1f)
+        // Manual rotation + ground tilt
+        if (agent.velocity.sqrMagnitude > 0.5f)
         {
             Vector3 forward = agent.velocity.normalized;
+            if (isMistakeActive) forward += mistakeOffset.normalized * 0.3f;
 
-            RaycastHit hit;
-            Vector3 upDir = Vector3.up;
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, raycastDistance, groundLayer))
-            {
-                upDir = hit.normal;
-            }
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
+                smoothedUp = Vector3.Lerp(smoothedUp, hit.normal, tiltSmoothing * Time.deltaTime);
 
-            smoothedUp = Vector3.Lerp(smoothedUp, upDir, tiltSmoothing * Time.deltaTime);
-            Quaternion targetRotation = Quaternion.LookRotation(forward, smoothedUp);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, agent.speed * turnMultiplier * Time.deltaTime);
+            Quaternion targetRot = Quaternion.LookRotation(forward, smoothedUp);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, agent.speed * turnMultiplier * Time.deltaTime);
         }
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        // FINISHED
+        if (endPoint != null && Vector3.Distance(transform.position, endPoint.position) < 5f)
+        {
             Destroy(gameObject);
+        }
     }
 
-    // NEW: Smart speed control
-    void AdjustSpeedBasedOnPath()
+    void HandleMistakes()
     {
-        if (!agent.hasPath || agent.path.corners.Length < 2)
+        if (isMistakeActive)
         {
-            agent.speed = Mathf.Lerp(agent.speed, baseSpeed * straightSpeedMultiplier, Time.deltaTime * 5f);
+            mistakeTimer -= Time.deltaTime;
+            if (mistakeTimer <= 0f)
+            {
+                isMistakeActive = false;
+                mistakeOffset = Vector3.zero;
+                agent.speed = baseSpeed;
+            }
             return;
         }
 
-        Vector3 currentPos = transform.position;
-        Vector3 currentDir = agent.velocity.sqrMagnitude > 0.01f ? agent.velocity.normalized : transform.forward;
-
-        // Look ahead along the path
-        Vector3 futurePoint = GetPointAlongPath(lookAheadDistance);
-        Vector3 futureDir = (futurePoint - currentPos).normalized;
-
-        float angleToFuture = Vector3.Angle(currentDir, futureDir);
-
-        float targetSpeed;
-
-        if (angleToFuture > turnThresholdAngle)
+        if (Random.value < mistakeChance * Time.deltaTime)
         {
-            // Sharp turn coming → slow down
-            targetSpeed = baseSpeed * turnSpeedMultiplier;
-        }
-        else
-        {
-            // Straight or gentle curve → speed up!
-            targetSpeed = baseSpeed * straightSpeedMultiplier;
-        }
+            isMistakeActive = true;
+            mistakeTimer = mistakeDuration + Random.Range(-0.5f, 0.8f);
 
-        // Smoothly apply the new speed
-        agent.speed = Mathf.Lerp(agent.speed, targetSpeed, Time.deltaTime * 6f);
-    }
-
-    // Helper: find point X units ahead along NavMesh path
-    Vector3 GetPointAlongPath(float distance)
-    {
-        var corners = agent.path.corners;
-        float distSoFar = 0f;
-
-        for (int i = 0; i < corners.Length - 1; i++)
-        {
-            Vector3 a = corners[i];
-            Vector3 b = corners[i + 1];
-            float segmentLength = Vector3.Distance(a, b);
-
-            if (distSoFar + segmentLength >= distance)
+            int type = Random.Range(0, 4);
+            switch (type)
             {
-                float t = (distance - distSoFar) / segmentLength;
-                return Vector3.Lerp(a, b, t);
+                case 0: mistakeOffset = Random.insideUnitSphere * wobbleAmount; break;
+                case 1: agent.speed = baseSpeed * 0.4f; break;   // sudden brake
+                case 2: agent.speed = baseSpeed * 2f; break;     // panic boost
+                case 3: mistakeOffset = Random.insideUnitSphere * wobbleAmount * 2f; break;
             }
-            distSoFar += segmentLength;
         }
-
-        // If we're near the end, just use last corner or endpoint
-        return corners.Length > 0 ? corners[corners.Length - 1] : endPoint.position;
     }
+
+    float GetUniqueSpeed(float min, float max)
+    {
+        float s;
+        int safety = 100;
+        do { s = Random.Range(min, max); safety--; }
+        while (usedSpeeds.Contains(s) && safety > 0);
+        if (safety > 0) usedSpeeds.Add(s);
+        return s;
+    }
+
+    void OnDestroy() => usedSpeeds.Clear();
 }

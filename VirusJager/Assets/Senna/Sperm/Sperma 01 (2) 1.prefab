@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8740904255302407040, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       propertyPath: m_LocalPosition.x
       value: 28.32
@@ -48,9 +52,57 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5380896455461485958, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -4619790055584722732, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -3267093166408007560, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       propertyPath: m_Name
       value: Sperma 01 (2) 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569902982352057227, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4709439814278281860, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325582539507569104, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5528860797864257434, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5649381591501240449, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750065138194088879, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8972343437592417536, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -67,10 +119,7 @@ PrefabInstance:
       addedObject: {fileID: 8745790448028936956}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4662301054893673789}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1073755625579571698}
+      addedObject: {fileID: 2785404126805949818}
   m_SourcePrefab: {fileID: 100100000, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
 --- !u!1 &8871579539952765991 stripped
 GameObject:
@@ -111,7 +160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e727d724f0c8da48b7c13445c568665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endPoint: {fileID: 0}
+  playerTag: Player
+  racerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   minSpeed: 10
   maxSpeed: 12
   turnMultiplier: 1
@@ -120,10 +172,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   tiltSmoothing: 8
-  lookAheadDistance: 8
-  turnThresholdAngle: 45
-  turnSpeedMultiplier: 0.824
-  straightSpeedMultiplier: 1.668
+  mistakeChance: 0.4
+  mistakeDuration: 1.5
+  wobbleAmount: 3
 --- !u!95 &8745790448028936956
 Animator:
   serializedVersion: 7
@@ -134,7 +185,7 @@ Animator:
   m_GameObject: {fileID: 8871579539952765991}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 141cd3874addbe0429e6fd5e5e674d59, type: 2}
+  m_Controller: {fileID: 9100000, guid: 56046e4aaee82b64bb245d5e97ed44d8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -146,7 +197,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!135 &4662301054893673789
+--- !u!135 &2785404126805949818
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,26 +216,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.9
-  m_Center: {x: -5.35, y: 0, z: 2.06}
---- !u!65 &1073755625579571698
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8871579539952765991}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 2.5076294}
-  m_Center: {x: -5.36, y: 0, z: -0.7538147}
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
