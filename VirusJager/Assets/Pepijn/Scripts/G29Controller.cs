@@ -13,15 +13,14 @@ public class G29Controller : MonoBehaviour
     public float CurrentSpeed => currentSpeed;
 
     [Header("UI Bar Settings")]
-    public Image fuelFillImage;         
-    public float minFill = 0.15f;          
-    public float maxFill = 0.85f;       
-    public float progressSpeed = 5f;  
-
-    private float fakeValue = 100f; 
+    public Image fuelFillImage;
+    public float minFill = 0.15f;
+    public float maxFill = 0.85f;
+    public float progressSpeed = 5f;
+    private float fakeValue = 100f;
 
     [Header("Tracked Variable")]
-    public float vruchtbaar = 100f;     
+    public float vruchtbaar = 100f;
 
     [Header("UI Manager")]
     public UIManager uiManager;
@@ -87,9 +86,7 @@ public class G29Controller : MonoBehaviour
         if (fakeValue > 0f)
         {
             fakeValue -= progressSpeed * Time.deltaTime;
-
-            if (fakeValue < 0f)
-                fakeValue = 0f;
+            if (fakeValue < 0f) fakeValue = 0f;
         }
 
         float percent = fakeValue / 100f;
@@ -104,9 +101,7 @@ public class G29Controller : MonoBehaviour
         if (vruchtbaar > 0f)
         {
             vruchtbaar -= progressSpeed * Time.deltaTime;
-
-            if (vruchtbaar < 0f)
-                vruchtbaar = 0f;
+            if (vruchtbaar < 0f) vruchtbaar = 0f;
         }
 
         Debug.Log(
