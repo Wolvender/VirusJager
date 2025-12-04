@@ -2981,6 +2981,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2750915735003282683, guid: fa25fa3c871c3e447b6ce285361b6f2d, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3138848178588812958, guid: fa25fa3c871c3e447b6ce285361b6f2d, type: 3}
       propertyPath: m_Name
       value: PF_ speed booster
@@ -3116,6 +3120,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 91678717434747963, guid: 215a2985dfb00874faa72aad8e630ce5, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8314863753884327489, guid: 215a2985dfb00874faa72aad8e630ce5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 428.33
