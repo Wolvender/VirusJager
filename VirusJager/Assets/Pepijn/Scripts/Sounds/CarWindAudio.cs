@@ -8,48 +8,51 @@ public class CarWindAudio : MonoBehaviour
     private AudioSource windAudio;
 
     [Header("Wind Settings")]
-    public float minWindSpeed = 4f;         // minimal speed before wind starts
-    public float maxWindVolume = 1f;        // volume at max speed
-    public float minPitch = 0.8f;           // pitch when barely hearing wind
-    public float maxPitch = 1.6f;           // pitch at top speed
-    public float fadeSmooth = 3f;           // smoothing
+    public float minWindSpeed = 2f;       // wind starts here
+    public float maxWindSpeed = 20f;      // wind fully maxed here
 
-    private float targetVol;
-    private float targetPitch;
+    [Range(0f, 0.4f)]
+    public float maxVolume = 0.25f;       // very subtle max volume
 
-    void Start()
+    public float minPitch = 0.85f;        // gentle start
+    public float maxPitch = 1.25f;        // subtle top
+
+    public float smooth = 2.5f;           // smooth transitions
+
+    private void Start()
     {
         windAudio = GetComponent<AudioSource>();
-
         windAudio.loop = true;
         windAudio.playOnAwake = false;
         windAudio.volume = 0f;
         windAudio.pitch = minPitch;
     }
 
-    void Update()
+    private void Update()
     {
-        if (car == null)
-            return;
+        if (car == null) return;
 
         float speed = car.CurrentSpeed;
 
-        // ---- SPEED percent ----
-        float percent = Mathf.InverseLerp(minWindSpeed, car.maxSpeed, speed);
+        // normalized percent for lerp
+        float percent = Mathf.InverseLerp(minWindSpeed, maxWindSpeed, speed);
 
-        targetVol = Mathf.Lerp(0f, maxWindVolume, percent);
-        targetPitch = Mathf.Lerp(minPitch, maxPitch, percent);
+        // reduce volume a lot at low speeds
+        float targetVol = Mathf.Lerp(0f, maxVolume, percent * percent);
 
-        // ---- SMOOTH ----
-        windAudio.volume = Mathf.Lerp(windAudio.volume, targetVol, Time.deltaTime * fadeSmooth);
-        windAudio.pitch = Mathf.Lerp(windAudio.pitch, targetPitch, Time.deltaTime * fadeSmooth);
+        // pitch remains smooth
+        float targetPitch = Mathf.Lerp(minPitch, maxPitch, percent);
 
-        // ---- PLAY IF MOVING ----
-        if (!windAudio.isPlaying && speed > 0.5f)
+        // smooth fade
+        windAudio.volume = Mathf.Lerp(windAudio.volume, targetVol, Time.deltaTime * smooth);
+        windAudio.pitch = Mathf.Lerp(windAudio.pitch, targetPitch, Time.deltaTime * smooth);
+
+        // always play while moving even slowly
+        if (!windAudio.isPlaying && speed > 0.25f)
             windAudio.Play();
 
-        // ---- STOP WHEN FULLY IDLE ----
-        if (windAudio.isPlaying && speed <= 0.3f && windAudio.volume < 0.02f)
+        // optional: stop when completely idle
+        if (windAudio.isPlaying && speed < 0.1f && windAudio.volume < 0.01f)
             windAudio.Stop();
     }
 }
