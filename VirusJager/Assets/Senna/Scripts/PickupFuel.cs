@@ -1,22 +1,48 @@
-//using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-//public class Pickup : MonoBehaviour
-//{
-//    public float fuel = 10f;
+[RequireComponent(typeof(Collider))]
+public class FuelPickup : MonoBehaviour
+{
+    [Header("Fuel Settings")]
+    public float fuelToAdd = 100f;        // How much this pickup gives
+    public float maxFuel = 100f;          // Maximum fuel the car can have
 
-//    void OnTriggerEnter(Collider other)
-//    {
-//        if (other.CompareTag("Player"))
-//        {
-//            G29Controller controller = other.GetComponent<G29Controller>();
+    [Header("Audio & Visual")]
+    public AudioClip pickupSound;
 
-//            if (controller != null)
-//            {
-//                controller.AddFuel(fuel);
-//                Debug.Log("Fuel added: " + fuel);
-//            }
+    private AudioSource audioSource;
+    private bool alreadyUsed = false;
 
-//            Destroy(gameObject);
-//        }
-//    }
-//}
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+        var col = GetComponent<Collider>();
+        if (col != null) col.isTrigger = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (alreadyUsed) return;
+        if (!other.CompareTag("Player")) return;
+
+        G29Controller car = other.GetComponent<G29Controller>();
+        if (car == null) return;
+
+        alreadyUsed = true;
+
+        // Play sound
+        if (pickupSound) audioSource.PlayOneShot(pickupSound);
+
+        // ADD FUEL AND CAP AT 100
+        car.vruchtbaar += fuelToAdd;
+        car.vruchtbaar = Mathf.Clamp(car.vruchtbaar, 0f, maxFuel);   // ← This line caps it!
+
+        // Visual disappear
+        var mr = GetComponent<MeshRenderer>();
+        if (mr) mr.enabled = false;
+        GetComponent<Collider>().enabled = false;
+
+        Destroy(gameObject, pickupSound ? pickupSound.length : 0.3f);
+    }
+}
