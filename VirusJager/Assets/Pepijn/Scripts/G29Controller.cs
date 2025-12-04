@@ -25,6 +25,10 @@ public class G29Controller : MonoBehaviour
     [Header("UI Manager")]
     public UIManager uiManager;
 
+    [Header("Collision Check")]
+    public float frontCheckDistance = 1f;
+    public LayerMask wallLayer;
+
     private float currentSpeed = 0f;
     private float steerValue;
     private float throttleValue;
@@ -33,6 +37,11 @@ public class G29Controller : MonoBehaviour
     public InputAction steerAction;
     public InputAction throttleAction;
     public InputAction brakeAction;
+
+    [Header("Ground Check")]
+    public float groundRayLength = 1.0f;
+    public LayerMask groundLayer;
+    private bool isGrounded;
 
     void OnEnable()
     {
@@ -51,6 +60,11 @@ public class G29Controller : MonoBehaviour
     void Update()
     {
         // ---------------------------
+        // GROUND CHECK
+        // ---------------------------
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, groundRayLength, groundLayer);
+
+        // ---------------------------
         // INPUT
         // ---------------------------
         steerValue = steerAction.ReadValue<float>();
@@ -60,8 +74,8 @@ public class G29Controller : MonoBehaviour
         // --- Keyboard fallback for testing ---
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.wKey.isPressed) rawThrottle = -1f; // W → full forward
-            if (Keyboard.current.sKey.isPressed) rawBrake = -1f;    // S → full brake
+            if (Keyboard.current.wKey.isPressed) rawThrottle = -1f; // W → forward
+            if (Keyboard.current.sKey.isPressed) rawBrake = -1f;    // S → brake
             if (Keyboard.current.aKey.isPressed) steerValue = -1f;  // A → left
             if (Keyboard.current.dKey.isPressed) steerValue = 1f;   // D → right
         }
@@ -70,12 +84,20 @@ public class G29Controller : MonoBehaviour
         brakeValue = Mathf.Clamp01((1f - rawBrake) / 2f);
 
         // ---------------------------
-        // SPEED LOGIC
+        // SPEED LOGIC – Only accelerate on ground!
         // ---------------------------
-        if (throttleValue > 0f)
-            currentSpeed += throttleValue * acceleration * Time.deltaTime;
+        if (isGrounded)
+        {
+            if (throttleValue > 0f)
+                currentSpeed += throttleValue * acceleration * Time.deltaTime;
+            else
+                currentSpeed -= deceleration * Time.deltaTime;
+        }
         else
-            currentSpeed -= deceleration * Time.deltaTime;
+        {
+            // In air: slow down slightly (optional)
+            currentSpeed -= deceleration * 0.2f * Time.deltaTime;
+        }
 
         if (brakeValue > 0f)
             currentSpeed -= brakeValue * brakeForce * Time.deltaTime;
@@ -83,9 +105,22 @@ public class G29Controller : MonoBehaviour
         currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
 
         // ---------------------------
+        // COLLISION CHECK
+        // ---------------------------
+        bool hitWall = Physics.Raycast(transform.position + Vector3.up * 0.5f, transform.forward, frontCheckDistance, wallLayer);
+
+        // ---------------------------
         // MOVEMENT
         // ---------------------------
-        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+        if (!hitWall)
+        {
+            transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+        }
+        else
+        {
+            currentSpeed = 0f; // optional: stop the car if it hits a wall
+        }
+
         transform.Rotate(Vector3.up, steerValue * steeringAngle * Time.deltaTime);
 
         // ---------------------------
@@ -104,7 +139,7 @@ public class G29Controller : MonoBehaviour
             fuelFillImage.fillAmount = mappedFill;
 
         // ---------------------------
-        // Vruchtbaar: also 100 → 0 (NO reset)
+        // Vruchtbaar: also 100 → 0
         // ---------------------------
         if (vruchtbaar > 0f)
         {
@@ -113,7 +148,22 @@ public class G29Controller : MonoBehaviour
         }
 
         Debug.Log(
-            $"Speed: {currentSpeed:F2}, Vruchtbaar: {vruchtbaar:F1}, ArcVal: {fakeValue:F1}, Fill: {mappedFill:F2}"
+            $"Speed: {currentSpeed:F2}, Grounded: {isGrounded}, Vruchtbaar: {vruchtbaar:F1}, ArcVal: {fakeValue:F1}, Fill: {mappedFill:F2}"
         );
+    }
+
+    // ---------------------------
+    // GROUND DEBUG DRAW (optional)
+    // ---------------------------
+    void OnDrawGizmos()
+    {
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawLine(transform.position + Vector3.up * 0.2f,
+                        transform.position + Vector3.up * 0.2f + Vector3.down * groundRayLength);
+
+        // Draw front collision ray
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position + Vector3.up * 0.5f,
+                        transform.position + Vector3.up * 0.5f + transform.forward * frontCheckDistance);
     }
 }

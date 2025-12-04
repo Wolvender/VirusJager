@@ -1,51 +1,55 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class CarWindAudio : MonoBehaviour
 {
     [Header("References")]
-    public G29Controller car;       // sleep je car object hier
-    public AudioSource windAudio;   // je looping wind audio source
+    public G29Controller car;
+    private AudioSource windAudio;
 
     [Header("Wind Settings")]
-    public float startWindSpeed = 10f; // start wind pas vanaf deze snelheid
-    public float maxWindVolume = 1f;
-    public float maxWindPitch = 1.3f;
-    public float windSmooth = 2f;
+    public float minWindSpeed = 4f;         // minimal speed before wind starts
+    public float maxWindVolume = 1f;        // volume at max speed
+    public float minPitch = 0.8f;           // pitch when barely hearing wind
+    public float maxPitch = 1.6f;           // pitch at top speed
+    public float fadeSmooth = 3f;           // smoothing
+
+    private float targetVol;
+    private float targetPitch;
 
     void Start()
     {
-        if (windAudio != null)
-        {
-            windAudio.loop = true;
-            windAudio.playOnAwake = false;
-        }
+        windAudio = GetComponent<AudioSource>();
+
+        windAudio.loop = true;
+        windAudio.playOnAwake = false;
+        windAudio.volume = 0f;
+        windAudio.pitch = minPitch;
     }
 
     void Update()
     {
-        if (car == null || windAudio == null)
+        if (car == null)
             return;
 
         float speed = car.CurrentSpeed;
 
-        // ---- bepaal speedPercent alleen als we boven startWindSpeed zitten ----
-        float speedPercent = 0f;
-        if (speed > startWindSpeed)
-        {
-            speedPercent = (speed - startWindSpeed) / (car.maxSpeed - startWindSpeed);
-            speedPercent = Mathf.Clamp01(speedPercent);
-        }
+        // ---- SPEED percent ----
+        float percent = Mathf.InverseLerp(minWindSpeed, car.maxSpeed, speed);
 
-        // ---- target volume/pitch ----
-        float targetVol = Mathf.Lerp(0f, maxWindVolume, speedPercent);
-        float targetPitch = Mathf.Lerp(1f, maxWindPitch, speedPercent);
+        targetVol = Mathf.Lerp(0f, maxWindVolume, percent);
+        targetPitch = Mathf.Lerp(minPitch, maxPitch, percent);
 
-        // ---- smooth transitions ----
-        windAudio.volume = Mathf.Lerp(windAudio.volume, targetVol, Time.deltaTime * windSmooth);
-        windAudio.pitch = Mathf.Lerp(windAudio.pitch, targetPitch, Time.deltaTime * windSmooth);
+        // ---- SMOOTH ----
+        windAudio.volume = Mathf.Lerp(windAudio.volume, targetVol, Time.deltaTime * fadeSmooth);
+        windAudio.pitch = Mathf.Lerp(windAudio.pitch, targetPitch, Time.deltaTime * fadeSmooth);
 
-        // ---- play audio als hij nog niet speelt ----
-        if (!windAudio.isPlaying && speed > startWindSpeed * 0.1f) // kleine marge zodat hij niet meteen begint
+        // ---- PLAY IF MOVING ----
+        if (!windAudio.isPlaying && speed > 0.5f)
             windAudio.Play();
+
+        // ---- STOP WHEN FULLY IDLE ----
+        if (windAudio.isPlaying && speed <= 0.3f && windAudio.volume < 0.02f)
+            windAudio.Stop();
     }
 }

@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8981206800022181682
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -179.19162
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 653.5955
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -566.81854
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.000001706183
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.000001706183
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.7071069
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      propertyPath: m_Name
+      value: 'grote bocht muur klein '
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7288482473213047456}
+  m_SourcePrefab: {fileID: 100100000, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+--- !u!1 &8098248187345119843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
+  m_PrefabInstance: {fileID: 8981206800022181682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7288482473213047456
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098248187345119843}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4316396397342943766, guid: 1ffdf8d9d974ace4da95a3eacbeaeeed, type: 3}
