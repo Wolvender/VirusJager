@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6d916e70afdd8684aa5fc35fbc28bf1a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9350775fcfcdc2d48abb3a85422106c2, type: 2}
     - target: {fileID: 919132149155446097, guid: 6d916e70afdd8684aa5fc35fbc28bf1a, type: 3}
       propertyPath: m_Name
       value: recht muur (3)
@@ -134,6 +138,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6d916e70afdd8684aa5fc35fbc28bf1a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9350775fcfcdc2d48abb3a85422106c2, type: 2}
     - target: {fileID: 919132149155446097, guid: 6d916e70afdd8684aa5fc35fbc28bf1a, type: 3}
       propertyPath: m_Name
       value: recht muur (2)
@@ -196,6 +204,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3d49e20294ffd0e479df9eb298d84596, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4ac0ed8e9e5eb924cbcf9dc0cb3d9f78, type: 2}
     - target: {fileID: 919132149155446097, guid: 3d49e20294ffd0e479df9eb298d84596, type: 3}
       propertyPath: m_Name
       value: 'dip '
