@@ -147,9 +147,8 @@ public class G29Controller : MonoBehaviour
             if (vruchtbaar < 0f) vruchtbaar = 0f;
         }
 
-        Debug.Log(
-            $"Speed: {currentSpeed:F2}, Grounded: {isGrounded}, Vruchtbaar: {vruchtbaar:F1}, ArcVal: {fakeValue:F1}, Fill: {mappedFill:F2}"
-        );
+
+
     }
 
     // ---------------------------
