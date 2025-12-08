@@ -5191,8 +5191,12 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 731990403405465926, guid: e94a038b56a7dac498f448f4af144b36, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 102.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 731990403405465926, guid: e94a038b56a7dac498f448f4af144b36, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -97.71282
+      value: -97.876
       objectReference: {fileID: 0}
     - target: {fileID: 731990403405465926, guid: e94a038b56a7dac498f448f4af144b36, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12363,7 +12367,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4858593743087592462, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
       propertyPath: m_Mass
-      value: 150
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4858593743087592462, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
       propertyPath: m_CollisionDetection
@@ -12384,6 +12388,14 @@ PrefabInstance:
     - target: {fileID: 6294224330878531587, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
       propertyPath: groundRayLength
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6294224330878531587, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
+      propertyPath: wallLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 6294224330878531587, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
+      propertyPath: frontCheckDistance
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 6294224330878531587, guid: 63832c6c80fca6343827cc205556c70b, type: 3}
       propertyPath: groundLayer.m_Bits
