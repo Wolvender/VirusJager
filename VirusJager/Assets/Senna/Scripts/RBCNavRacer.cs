@@ -27,52 +27,66 @@ public class RBCNavRacer : MonoBehaviour
     public float stuckDetectionDistance = 0.3f;
     public float stuckTimeThreshold = 0.8f;
     public float pushAwayForce = 14f;
-    public float extraAvoidanceRadius = 0.35f;
+
+    [Header("=== SMOOTHING & PERFORMANCE ===")]
+    public float speedChangeRate = 12f;
+    public float destBlendRate = 8f;
+    public float velocitySmoothing = 10f;
 
     // ──────────────────────
     private NavMeshAgent agent;
     private float baseSpeed;
+    private float currentSpeed;
     private Vector3 smoothedUp = Vector3.up;
     private static List<float> usedSpeeds = new List<float>();
 
     // Mistake system
     private float mistakeTimer = 0f;
     private bool isMistakeActive = false;
-    private Vector3 mistakeOffset = Vector3.zero;
+    private Vector3 targetMistakeOffset = Vector3.zero;
+    private Vector3 currentMistakeOffset = Vector3.zero;
 
-    // Anti-stuck system
+    // Anti-stuck
     private Vector3 lastPosition;
     private float stuckTimer = 0f;
     private int stuckFrames = 0;
+
+    // Smoothing
+    private Vector3 smoothedVelocity;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
-        // Core settings for aggressive chaotic racing
+        NavMesh.pathfindingIterationsPerFrame = 25000;
+
         agent.updateRotation = false;
-        agent.updateUpAxis = false;           // Crucial for tilted/banked tracks
+        agent.updateUpAxis = false;
         agent.angularSpeed = 0f;
         agent.autoBraking = false;
         agent.stoppingDistance = 0f;
-
         agent.radius = 0.5f;
         agent.height = 1.8f;
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(1, 99);
 
         baseSpeed = GetUniqueSpeed(minSpeed, maxSpeed);
+        currentSpeed = baseSpeed;
         agent.speed = baseSpeed;
         agent.acceleration = baseSpeed * 5f;
 
+        lastPosition = transform.position;
+        smoothedVelocity = transform.forward * baseSpeed * 0.7f;
+
         if (endPoint != null)
         {
-            Vector3 finalDest = endPoint.position + new Vector3(
-                Random.Range(-4f, 4f), 0f, Random.Range(-4f, 4f));
-            agent.SetDestination(finalDest);
+            Vector3 offset = new Vector3(
+                Random.Range(-4f, 4f),   // X
+                0f,                      // Y  ← you probably meant 0f, not 4f
+                Random.Range(-4f, 4f)    // Z
+            );
+            SetSmoothDestination(endPoint.position + offset);
         }
-
-        lastPosition = transform.position;
     }
 
     void Update()
@@ -80,40 +94,79 @@ public class RBCNavRacer : MonoBehaviour
         HandleMistakes();
         HandleStuckAgainstWall();
 
-        // Occasional chaotic re-targeting for overtaking & madness
+        // Chaotic retargeting (keeps them lively)
         if (Random.value < 0.02f && endPoint != null)
         {
             Vector3 chaoticDest = endPoint.position + new Vector3(
-                Random.Range(-6f, 6f), 0f, Random.Range(-6f, 6f)) + mistakeOffset;
-            agent.SetDestination(chaoticDest);
+                Random.Range(-6f, 6f), 0f, Random.Range(-6f, 6f)) + currentMistakeOffset;
+            SetSmoothDestination(chaoticDest);
         }
+
+        ApplySmoothing();
     }
 
     void FixedUpdate()
     {
-        // Optional wall-sliding / bounce (feels amazing)
         WallSlideAndBounce();
     }
 
     void LateUpdate()
     {
-        // Manual rotation + ground tilt
-        if (agent.velocity.sqrMagnitude > 0.5f)
+        if (agent.velocity.sqrMagnitude > 0.1f || currentMistakeOffset != Vector3.zero)
         {
-            Vector3 forward = agent.velocity.normalized;
-            if (isMistakeActive) forward += mistakeOffset.normalized * 0.3f;
+            Vector3 moveDirection = smoothedVelocity.normalized;
 
+            if (moveDirection.sqrMagnitude < 0.1f || Vector3.Dot(moveDirection, transform.forward) < -0.3f)
+                moveDirection = transform.forward;
+
+            Vector3 wobble = currentMistakeOffset;
+            if (wobble.sqrMagnitude > 0.1f)
+            {
+                wobble = Vector3.ProjectOnPlane(wobble, Vector3.up);
+                wobble = Vector3.ClampMagnitude(wobble, wobbleAmount * 0.8f);
+            }
+
+            Vector3 finalForward = (moveDirection + wobble * 0.3f).normalized;
+
+            if (Vector3.Dot(finalForward, transform.forward) < -0.1f)
+                finalForward = Vector3.Lerp(transform.forward, finalForward, 0.6f).normalized;
+
+            Vector3 up = smoothedUp;
             if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
-                smoothedUp = Vector3.Lerp(smoothedUp, hit.normal, tiltSmoothing * Time.deltaTime);
+                up = Vector3.Lerp(up, hit.normal, tiltSmoothing * Time.deltaTime);
 
-            Quaternion targetRot = Quaternion.LookRotation(forward, smoothedUp);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, agent.speed * turnMultiplier * Time.deltaTime);
+            Quaternion targetRot = Quaternion.LookRotation(finalForward, up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, currentSpeed * turnMultiplier * Time.deltaTime);
         }
 
-        // Finish line
-        if (endPoint != null && Vector3.Distance(transform.position, endPoint.position) < 5f)
+        // REMOVED THE DESTROY LINE ON PURPOSE
+        // Now only the EggFertilization script decides when to kill the sperm
+    }
+
+    // ────── ALL OTHER METHODS UNCHANGED METHODS BELOW ──────
+    void ApplySmoothing()
+    {
+        currentSpeed = Mathf.Lerp(currentSpeed, isMistakeActive ? agent.speed : baseSpeed, speedChangeRate * Time.deltaTime);
+        agent.speed = currentSpeed;
+
+        currentMistakeOffset = Vector3.Lerp(currentMistakeOffset, targetMistakeOffset, 14f * Time.deltaTime);
+
+        Vector3 desiredVel = agent.desiredVelocity + currentMistakeOffset * 8f;
+        smoothedVelocity = Vector3.Lerp(smoothedVelocity, desiredVel, velocitySmoothing * Time.deltaTime);
+        agent.velocity = smoothedVelocity;
+    }
+
+    void SetSmoothDestination(Vector3 dest)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, path) &&
+            path.status == NavMeshPathStatus.PathComplete)
         {
-            Destroy(gameObject);
+            agent.SetPath(path);
+        }
+        else
+        {
+            agent.SetDestination(dest);
         }
     }
 
@@ -125,8 +178,7 @@ public class RBCNavRacer : MonoBehaviour
             if (mistakeTimer <= 0f)
             {
                 isMistakeActive = false;
-                mistakeOffset = Vector3.zero;
-                agent.speed = baseSpeed;
+                targetMistakeOffset = Vector3.zero;
             }
             return;
         }
@@ -134,23 +186,22 @@ public class RBCNavRacer : MonoBehaviour
         if (Random.value < mistakeChance * Time.deltaTime)
         {
             isMistakeActive = true;
-            mistakeTimer = mistakeDuration + Random.Range(-0.5f, 0.8f);
+            mistakeTimer = mistakeDuration + Random.Range(-0.4f, 0.6f);
             int type = Random.Range(0, 4);
             switch (type)
             {
-                case 0: mistakeOffset = Random.insideUnitSphere * wobbleAmount; break;
-                case 1: agent.speed = baseSpeed * 0.4f; break; // sudden brake
-                case 2: agent.speed = baseSpeed * 2f; break;   // panic boost
-                case 3: mistakeOffset = Random.insideUnitSphere * wobbleAmount * 2f; break;
+                case 0: targetMistakeOffset = Random.insideUnitSphere * wobbleAmount * 0.8f; break;
+                case 1: agent.speed = baseSpeed * 0.45f; break;
+                case 2: agent.speed = baseSpeed * 1.9f; break;
+                case 3: targetMistakeOffset = Random.insideUnitSphere * wobbleAmount * 1.4f; break;
             }
         }
     }
 
     void HandleStuckAgainstWall()
     {
-        float movedDistance = Vector3.Distance(transform.position, lastPosition);
-
-        if (movedDistance < stuckDetectionDistance)
+        float moved = Vector3.Distance(transform.position, lastPosition);
+        if (moved < stuckDetectionDistance)
         {
             stuckTimer += Time.deltaTime;
             stuckFrames++;
@@ -163,17 +214,15 @@ public class RBCNavRacer : MonoBehaviour
 
         if (stuckTimer > stuckTimeThreshold || stuckFrames > 25)
         {
-            // Strong sideways push to escape wall grinding
-            Vector3 pushDir = Vector3.up;
+            Vector3 pushDir = transform.right;
             if (Physics.Raycast(transform.position + Vector3.up * 0.5f, -transform.forward, out RaycastHit hit, 3f))
             {
-                pushDir = Vector3.Cross(Vector3.up, agent.velocity.normalized + Vector3.up * 0.1f);
-                if (Vector3.Dot(pushDir, (transform.position - hit.point)) < 0) pushDir = -pushDir;
+                pushDir = Vector3.Cross(Vector3.up, agent.velocity.normalized).normalized;
+                if (Vector3.Dot(pushDir, transform.position - hit.point) < 0) pushDir = -pushDir;
             }
 
             agent.velocity += pushDir * pushAwayForce;
-            agent.speed = baseSpeed * 1.5f; // temporary escape boost
-
+            agent.speed = baseSpeed * 1.6f;
             stuckTimer = 0f;
             stuckFrames = 0;
         }
@@ -187,11 +236,10 @@ public class RBCNavRacer : MonoBehaviour
 
         if (Physics.Raycast(transform.position + Vector3.up * 0.6f, agent.velocity.normalized, out RaycastHit hit, 1.8f))
         {
-            float angle = Vector3.Angle(hit.normal, Vector3.up);
-            if (angle > 70f) // definitely a wall
+            if (Vector3.Angle(hit.normal, Vector3.up) > 70f)
             {
-                Vector3 reflectDir = Vector3.Reflect(agent.velocity.normalized, hit.normal);
-                agent.velocity = Vector3.Lerp(agent.velocity, reflectDir * agent.velocity.magnitude, 0.4f);
+                Vector3 reflect = Vector3.Reflect(agent.velocity.normalized, hit.normal);
+                agent.velocity = Vector3.Lerp(agent.velocity, reflect * agent.velocity.magnitude, 0.5f);
             }
         }
     }

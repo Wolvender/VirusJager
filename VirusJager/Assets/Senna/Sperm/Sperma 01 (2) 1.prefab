@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      propertyPath: m_TagString
+      value: Sperm
+      objectReference: {fileID: 0}
     - target: {fileID: 4569902982352057227, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -120,6 +124,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2785404126805949818}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7944191542224638619}
   m_SourcePrefab: {fileID: 100100000, guid: 5ca8b28bfc25fc248b2d782fc955f171, type: 3}
 --- !u!1 &8871579539952765991 stripped
 GameObject:
@@ -160,10 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e727d724f0c8da48b7c13445c568665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTag: Player
-  racerLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  endPoint: {fileID: 0}
   minSpeed: 10
   maxSpeed: 12
   turnMultiplier: 1
@@ -173,8 +177,14 @@ MonoBehaviour:
     m_Bits: 1
   tiltSmoothing: 8
   mistakeChance: 0.4
-  mistakeDuration: 1.5
+  mistakeDuration: 0.5
   wobbleAmount: 3
+  stuckDetectionDistance: 0.3
+  stuckTimeThreshold: 0.3
+  pushAwayForce: 16
+  speedChangeRate: 12
+  destBlendRate: 8
+  velocitySmoothing: 12
 --- !u!95 &8745790448028936956
 Animator:
   serializedVersion: 7
@@ -218,3 +228,30 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7944191542224638619
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871579539952765991}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
