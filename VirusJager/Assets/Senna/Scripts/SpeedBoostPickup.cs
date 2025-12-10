@@ -14,44 +14,62 @@ public class SpeedBoostPickup : MonoBehaviour
 
     private AudioSource audioSource;
     private G29Controller carController;
-    private bool alreadyUsed = false;          // ← prevents double-trigger
+    private bool alreadyUsed = false;
 
     private void Awake()
     {
         // Setup audio
         audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
-        // Force trigger
+        // Force trigger + add kinematic Rigidbody (required for trigger to work!)
         var col = GetComponent<Collider>();
-        if (col != null) col.isTrigger = true;
+        if (col) col.isTrigger = true;
+
+        var rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 1. Safety checks
+        // Prevent double pickup
         if (alreadyUsed) return;
+
+        // Only react to Player tag
         if (!other.CompareTag("Player")) return;
 
-        carController = other.GetComponent<G29Controller>();
-        if (carController == null) return;
+        // Find G29Controller anywhere in the player hierarchy
+        carController = other.GetComponentInParent<G29Controller>() ?? other.GetComponentInChildren<G29Controller>();
 
-        alreadyUsed = true;                     // ← stops double pickup
+        // CRITICAL: Only proceed if we actually found the controller!
+        if (carController == null)
+        {
+            Debug.LogWarning("[SpeedBoost] Player touched boost but has no G29Controller in hierarchy!");
+            return;
+        }
 
-        // 2. Play sound
-        if (boostSound) audioSource.PlayOneShot(boostSound);
+        alreadyUsed = true;
+        Debug.Log("[SpeedBoost] NITRO PICKED UP! BOOST ACTIVATED!");
 
-        // 3. Apply boost + guarantee restore + destroy
+        // Play sound
+        if (boostSound && audioSource)
+            audioSource.PlayOneShot(boostSound);
+
+        // Apply boost
         StartCoroutine(ApplyAndRestoreBoost());
 
-        // 4. Visual disappear immediately
+        // Visual disappear
         var mr = GetComponent<MeshRenderer>();
         if (mr) mr.enabled = false;
-        GetComponent<Collider>().enabled = false;
+
+        var col = GetComponent<Collider>();
+        if (col) col.enabled = false;
     }
 
     private IEnumerator ApplyAndRestoreBoost()
     {
-        // Grab REAL base values right now
+        // Store original values
         float originalMaxSpeed = carController.maxSpeed;
         float originalAccel = carController.acceleration;
 
@@ -59,14 +77,14 @@ public class SpeedBoostPickup : MonoBehaviour
         carController.maxSpeed *= speedMultiplier;
         carController.acceleration *= accelerationMultiplier;
 
-        // Wait exact time
+        // Wait
         yield return new WaitForSeconds(boostDuration);
 
-        // FORCE restore – this wins over everything
+        // Restore original values
         carController.maxSpeed = originalMaxSpeed;
         carController.acceleration = originalAccel;
 
-        // Destroy the pickup object (100% guaranteed)
+        // Self-destruct
         Destroy(gameObject);
     }
-}
+}   
