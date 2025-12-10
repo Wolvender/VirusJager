@@ -1,0 +1,29 @@
+using UnityEngine;
+
+public class Finish : MonoBehaviour
+{
+    public UIManage uiManager;
+    private bool raceEnded = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (raceEnded) return;
+
+        if (other.CompareTag("Player"))
+        {
+            raceEnded = true;
+            uiManager.ShowWinScreen();
+
+            PlayerCelebration celebration = other.GetComponent<PlayerCelebration>();
+            if (celebration != null)
+            {
+                celebration.StartCelebration();
+            }
+        }
+        else if (other.CompareTag("AI"))
+        {
+            raceEnded = true;
+            uiManager.ShowGameOver();
+        }
+    }
+}
