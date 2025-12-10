@@ -20,7 +20,7 @@ public class Finish : MonoBehaviour
                 celebration.StartCelebration();
             }
         }
-        else if (other.CompareTag("AI"))
+        else if (other.CompareTag("Sperma"))
         {
             raceEnded = true;
             uiManager.ShowGameOver();
