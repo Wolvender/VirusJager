@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
-using System.Collections.Generic;
-using UnityEngine.AI;
 
 public class EggFertilization : MonoBehaviour
 {
@@ -11,14 +8,13 @@ public class EggFertilization : MonoBehaviour
     public GameObject losePanel;
     public GameObject winPanel;
 
-    [Header("Win Panel Stuff")]
-    public TextMeshProUGUI resultText;
+    [Header("Text (Optional - auto-finds if empty)")]
+    public TextMeshProUGUI winText;
+    public TextMeshProUGUI loseText;
+
+    [Header("Win Animation")]
     public Animator eggAnimator;
     public string fertilizationTrigger = "Fertilize";
-
-    [Header("What to destroy on game end")]
-    public string spermTag = "Sperm";
-    public List<GameObject> extraObjectsToDestroy = new List<GameObject>();
 
     private bool gameHasEnded = false;
 
@@ -34,27 +30,6 @@ public class EggFertilization : MonoBehaviour
         {
             GameOverWin();
         }
-
-        // Stop the agent
-        if (other.TryGetComponent<NavMeshAgent>(out var agent))
-        {
-            agent.isStopped = true;
-        }
-    }
-
-    void GameOverLose()
-    {
-        if (gameHasEnded) return;
-        gameHasEnded = true;
-
-        Debug.Log("You lost!");
-
-        // SAFE version – won't throw exceptions if you didn't assign the panels yet
-        if (losePanel != null) losePanel.SetActive(true);
-        else Debug.Log("[EggFertilization] losePanel not assigned – skipping show lose screen");
-
-        Time.timeScale = 0f;                       // ← this will now run
-        DestroyAllSpermAndCleanup();               // ← this will now run
     }
 
     void GameOverWin()
@@ -62,70 +37,48 @@ public class EggFertilization : MonoBehaviour
         if (gameHasEnded) return;
         gameHasEnded = true;
 
-        Debug.Log("You won!");
+        PauseGame();
 
         if (winPanel != null) winPanel.SetActive(true);
-        else Debug.Log("[EggFertilization] winPanel not assigned – skipping show win screen");
-
-        Time.timeScale = 0f;
-        DestroyAllSpermAndCleanup();
+        if (winText == null) winText = winPanel?.GetComponentInChildren<TextMeshProUGUI>();
+        if (winText != null) winText.text = "SUCCESS!\nYou fertilized the egg!";
 
         if (eggAnimator != null)
             eggAnimator.SetTrigger(fertilizationTrigger);
-
     }
 
-    void DestroyAllSpermAndCleanup()
+    void GameOverLose()
     {
-        Debug.Log("🔥 NUCLEAR SPERM CLEANUP STARTED 🔥");
+        if (gameHasEnded) return;
+        gameHasEnded = true;
 
-        // Method 1: Tag-based (your original)
-        GameObject[] sperms = GameObject.FindGameObjectsWithTag("Sperm");
-        int count1 = 0;
-        foreach (GameObject sperm in sperms)
-        {
-            if (sperm != null)
-            {
-                DestroyImmediate(sperm);
-                count1++;
-            }
-        }
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
-        int count2 = 0;
-        foreach (GameObject obj in allObjects)
-        {
-            if (obj != null &&
-                (obj.name.Contains("Sperm") || obj.name.Contains("Sperma") || obj.name.Contains("dak")))
-            {
-                DestroyImmediate(obj);
-                count2++;
-            }
-        }
+        PauseGame();
 
-        // Method 3: Disable ALL NavMeshAgents instantly (stops movement NOW)
-        NavMeshAgent[] allAgents = FindObjectsOfType<NavMeshAgent>();
-        foreach (NavMeshAgent agent in allAgents)
-        {
-            if (agent != null && agent.gameObject != this.gameObject)
-            {
-                agent.isStopped = true;
-                agent.enabled = false;
-            }
-        }
-
-        // Extra objects
-        foreach (GameObject obj in extraObjectsToDestroy)
-        {
-            if (obj != null) DestroyImmediate(obj);
-        }
-
-        Debug.Log($"💀 DESTROYED {count1} tagged + {count2} name-based = TOTAL {count1 + count2} sperm. ALL AGENTS DISABLED.");
+        if (losePanel != null) losePanel.SetActive(true);
+        if (loseText == null) loseText = losePanel?.GetComponentInChildren<TextMeshProUGUI>();
+        if (loseText != null) loseText.text = "GAME OVER!\nA sperm got there first!";
     }
 
-    // Button method: Try Again
+    // THIS IS THE ONLY THING WE NEED TO PAUSE THE GAME
+    private void PauseGame()
+    {
+        Time.timeScale = 0f;  // Everything stops (including your RBCNavRacer script if it uses deltaTime)
+    }
+
+    // BUTTONS – assign these in the Inspector on your Try Again buttons
     public void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ExitGame()
+    {
+        Time.timeScale = 1f;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
