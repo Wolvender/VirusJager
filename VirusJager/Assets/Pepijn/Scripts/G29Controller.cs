@@ -22,9 +22,6 @@ public class G29Controller : MonoBehaviour
     [Header("Tracked Variable")]
     public float vruchtbaar = 100f;
 
-    [Header("UI Manager")]
-    public UIManager uiManager;
-
     [Header("Collision Check")]
     public float frontCheckDistance = 1f;
     public LayerMask wallLayer;
