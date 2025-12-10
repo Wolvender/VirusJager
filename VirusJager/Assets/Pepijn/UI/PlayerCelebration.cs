@@ -1,14 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerCelebration : MonoBehaviour
 {
-    [Header("References")]
-    public Transform celebrationPoint;
-    public Animator animator;
-
-    [Header("Movement")]
-    public float moveSpeed = 3f;
+    public Transform celebrationPoint;        // Drag your celebration spot here
+    public Animator animator;            // Drag player's Animator here
 
     private bool celebrationIsRunning = false;
 
@@ -17,41 +12,19 @@ public class PlayerCelebration : MonoBehaviour
         if (celebrationIsRunning) return;
         celebrationIsRunning = true;
 
-        Debug.Log("Celebration started");
+        if (celebrationPoint == null)
+        {
+            Debug.LogError("Celebration Point not assigned!");
+            return;
+        }
 
-        // If you have a movement script, disable it here:
-        // GetComponent<PlayerMovement>().enabled = false;
+        // Instant teleport
+        transform.position = celebrationPoint.position;
+        transform.rotation = celebrationPoint.rotation; // optional: also match rotation
 
-        StartCoroutine(TeleportRoutine());
+        Debug.Log("Player teleported to celebration point!");
 
         if (animator != null)
             animator.SetBool("Win", true);
     }
-
-    private IEnumerator TeleportRoutine()
-    {
-        if (celebrationPoint == null)
-        {
-            Debug.LogError("NO Celebration Point Assigned!");
-            yield break;
-        }
-
-        // Move until close enough
-        while (Vector3.Distance(transform.position, celebrationPoint.position) > 0.05f)
-        {
-            transform.position = Vector3.MoveTowards
-            (
-                transform.position,
-                celebrationPoint.position,
-                moveSpeed * Time.deltaTime
-            );
-
-            yield return null;
-        }
-
-        // Snap to exact final point
-        transform.position = celebrationPoint.position;
-        Debug.Log("Arrived at celebration position");
-    }
-
 }
