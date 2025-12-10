@@ -793,14 +793,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7565089881481328537, guid: a4c2348e58f25c340b4589f34d9b3832, type: 3}
       propertyPath: m_Name
-      value: ouchies
+      value: Goop 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4c2348e58f25c340b4589f34d9b3832, type: 3}
---- !u!1001 &7934456995457054081
+--- !u!1001 &6808270263650005280
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -808,47 +808,47 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.1202135
+      value: 9.023083
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.555611
+      value: -12.72
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -27.413544
+      value: -28.929031
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071067
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+      propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1193211865684155516, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7327233854407412362, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2000991806104454854, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
+    - target: {fileID: 7990583047468339248, guid: 60f5f53073c92bd4fb7059f8f3e398e9, type: 3}
       propertyPath: m_Name
       value: Goop
       objectReference: {fileID: 0}
@@ -868,5 +868,5 @@ SceneRoots:
   - {fileID: 2386415711566392083}
   - {fileID: 46492924}
   - {fileID: 982721931}
-  - {fileID: 7934456995457054081}
   - {fileID: 3438852644667883401}
+  - {fileID: 6808270263650005280}
