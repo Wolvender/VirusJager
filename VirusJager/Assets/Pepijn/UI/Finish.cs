@@ -11,16 +11,11 @@ public class Finish : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            Debug.Log("entered");
             raceEnded = true;
             uiManager.ShowWinScreen();
 
             PlayerCelebration celebration = other.GetComponent<PlayerCelebration>();
-            if (celebration != null)
-            {
-                Debug.Log("start");
-                celebration.StartCelebration();
-            }
+            celebration?.StartCelebration();
         }
         else if (other.CompareTag("Sperm"))
         {
