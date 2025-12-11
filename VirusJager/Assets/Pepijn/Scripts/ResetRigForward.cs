@@ -1,43 +1,57 @@
 ﻿using UnityEngine;
 using UnityEngine.XR;
-using System.Collections.Generic;
 
-public class ResetRigOnStart : MonoBehaviour
+// This works with OpenXR, Oculus, SteamVR, Pico, etc. – no XR Interaction Toolkit required!
+public class ResetRigForward : MonoBehaviour
 {
-    public Transform xrOrigin; // The XR Origin or Camera Rig
+    [Header("Leave empty to auto-detect")]
+    public Transform rigRoot;     // Usually your "XR Origin" or "XR Rig"
+    public Transform headCamera;  // Usually the Main Camera
 
-    private XRDisplaySubsystem display;
+    [Tooltip("Delay in seconds to wait for tracking to stabilize")]
+    public float delay = 0.5f;
 
     void Start()
     {
-        // Find XR Display subsystem
-        List<XRDisplaySubsystem> displays = new List<XRDisplaySubsystem>();
-        SubsystemManager.GetSubsystems(displays);
+        // Auto-find if not assigned
+        if (rigRoot == null)
+        {
+            // Most common names Unity uses
+            rigRoot = GameObject.Find("XR Origin")?.transform
+                   ?? GameObject.Find("XR Rig")?.transform
+                   ?? GameObject.Find("XROrigin")?.transform
+                   ?? transform; // fallback to this object
+        }
 
-        if (displays.Count > 0)
-            display = displays[0];
+        if (headCamera == null)
+        {
+            headCamera = Camera.main?.transform;
+        }
 
-        // Delay one frame so tracking has initialized
-        StartCoroutine(ResetNextFrame());
+        Invoke(nameof(Recenter), delay);
     }
 
-    private System.Collections.IEnumerator ResetNextFrame()
+    void Recenter()
     {
-        yield return null; // wait 1 frame
+        if (headCamera == null)
+        {
+            Debug.LogError("[ResetRigForward] Could not find head camera!");
+            return;
+        }
 
-        if (display != null && display.running)
-            ResetDirection();
-    }
+        // Get only the yaw (Y rotation) of the player's head
+        float headYaw = headCamera.rotation.eulerAngles.y;
 
-    private void ResetDirection()
-    {
-        // Get current head rotation
-        Quaternion headRot = InputTracking.GetLocalRotation(XRNode.CenterEye);
+        // Cancel yaw by rotating the rig the opposite direction
+        Quaternion cancelYaw = Quaternion.Euler(0f, -headYaw, 0f);
+        rigRoot.rotation = cancelYaw * rigRoot.rotation;
 
-        // Only align yaw (horizontal rotation)
-        float yaw = headRot.eulerAngles.y;
+        // Optional: Snap player back to X=0, Z=0 on the floor (keeps real-world height)
+        Vector3 pos = rigRoot.position;
+        pos.x = 0f;
+        pos.z = 0f;
+        rigRoot.position = pos;
 
-        // Rotate the root opposite
-        transform.rotation = Quaternion.Euler(0, -yaw, 0);
+        Debug.Log($"[ResetRigForward] Done! Player now faces +Z. Head yaw was {headYaw:F1} degrees.");
     }
 }

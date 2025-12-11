@@ -118,8 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a132a97436ef6c409bf7cc1d0621ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMultiplier: 1.8
-  accelerationMultiplier: 2.2
+  speedMultiplier: 1.3
+  accelerationMultiplier: 1.5
   boostDuration: 2.5
   boostSound: {fileID: 8300000, guid: 85b2c0c1542e1f345b473fc0a25be9fc, type: 3}
 --- !u!82 &1371070586755898049
