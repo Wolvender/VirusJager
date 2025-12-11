@@ -14,7 +14,6 @@ public class PowerUpSpawner : MonoBehaviour
     [Header("Debug")]
     public bool showGizmos = true;
 
-    // THIS IS THE LIST THAT TRACKS EVERYTHING
     private List<GameObject> activePowerUps = new List<GameObject>();
 
     void Start()
@@ -24,40 +23,57 @@ public class PowerUpSpawner : MonoBehaviour
 
     void TrySpawnPowerUp()
     {
-        // Clean up any destroyed power-ups first (important!)
         activePowerUps.RemoveAll(item => item == null);
 
         if (activePowerUps.Count >= maxPowerUps) return;
-        if (powerUpPrefabs.Count == 0) return;
+        if (powerUpPrefabs.Count < 2) return;
 
-        Vector2 randomPoint = Random.insideUnitCircle * spawnRadius;
-        Vector3 spawnPosition = transform.position + new Vector3(randomPoint.x, 0, randomPoint.y);
+        // Pick two DIFFERENT prefabs
+        List<GameObject> selectedPrefabs = GetTwoDifferentPrefabs();
+        if (selectedPrefabs == null || selectedPrefabs.Count != 2) return;
 
-        if (Physics.Raycast(spawnPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f))
+        // Spawn TWO power-ups at COMPLETELY INDEPENDENT random positions
+        for (int i = 0; i < 2; i++)
         {
-            // BEST ONE → nice floating height + room for spin/bob
-            spawnPosition = hit.point + Vector3.up * 1.3f;
+            // Completely new random point inside the circle
+            Vector2 randomPoint = Random.insideUnitCircle * spawnRadius;
+            Vector3 spawnPosition = transform.position + new Vector3(randomPoint.x, 0, randomPoint.y);
+
+            // Raycast down to find ground
+            if (Physics.Raycast(spawnPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f))
+            {
+                spawnPosition = hit.point + Vector3.up * 1.3f;
+            }
+            else
+            {
+                spawnPosition.y += 1.3f;
+            }
+
+            GameObject powerUp = Instantiate(selectedPrefabs[i], spawnPosition, Quaternion.identity);
+            activePowerUps.Add(powerUp);
+            Destroy(powerUp, 30f);
         }
-        else
-        {
-            // Fallback if no ground found
-            spawnPosition.y += 1.3f;
-        }
-
-        GameObject prefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Count)];
-        GameObject powerUp = Instantiate(prefab, spawnPosition, Quaternion.identity);
-
-        // ADD TO TRACKING LIST
-        activePowerUps.Add(powerUp);
-
-        // Optional: auto-remove after 30 seconds if never picked up
-        Destroy(powerUp, 30f);
     }
 
-    // Optional: visual count in hierarchy or console
+    List<GameObject> GetTwoDifferentPrefabs()
+    {
+        List<GameObject> selected = new List<GameObject>();
+
+        int firstIndex = Random.Range(0, powerUpPrefabs.Count);
+        selected.Add(powerUpPrefabs[firstIndex]);
+
+        int secondIndex;
+        do
+        {
+            secondIndex = Random.Range(0, powerUpPrefabs.Count);
+        } while (secondIndex == firstIndex);
+
+        selected.Add(powerUpPrefabs[secondIndex]);
+        return selected;
+    }
+
     void Update()
     {
-        // Clean up null references every frame (very cheap)
         activePowerUps.RemoveAll(item => item == null);
     }
 

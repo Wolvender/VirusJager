@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadius: 6.3
   spawnInterval: 1
-  maxPowerUps: 2
+  maxPowerUps: 1
   powerUpPrefabs:
   - {fileID: 6244671758489643433, guid: c65d6161cd3f731459530768a0eb22e1, type: 3}
+  - {fileID: 7355456784150960538, guid: 1596a0488bc4c2049b651dc6671eb669, type: 3}
   showGizmos: 1
