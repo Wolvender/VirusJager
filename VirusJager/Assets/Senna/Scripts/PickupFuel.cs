@@ -5,8 +5,8 @@ using System.Collections;
 public class FuelPickup : MonoBehaviour
 {
     [Header("Fuel Settings")]
-    public float fuelToAdd = 100f;        // How much this pickup gives
-    public float maxFuel = 100f;          // Maximum fuel the car can have
+    public float fuelToAdd = 100f;
+    public float maxFuel = 100f;
 
     [Header("Audio & Visual")]
     public AudioClip pickupSound;
@@ -17,31 +17,49 @@ public class FuelPickup : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+
         var col = GetComponent<Collider>();
         if (col != null) col.isTrigger = true;
+
+        // 🔥 FIX #1: Add kinematic Rigidbody (CRITICAL!)
+        var rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (alreadyUsed) return;
+
         if (!other.CompareTag("Player")) return;
 
-        G29Controller car = other.GetComponent<G29Controller>();
-        if (car == null) return;
+        // 🔥 FIX #2: Better controller detection (like SpeedBoost)
+        G29Controller car = other.GetComponentInParent<G29Controller>() ??
+                           other.GetComponent<G29Controller>() ??
+                           other.GetComponentInChildren<G29Controller>();
+
+        if (car == null)
+        {
+            Debug.LogWarning("[FuelPickup] Player touched fuel but no G29Controller found!");
+            return;
+        }
 
         alreadyUsed = true;
 
+        // 🔥 FIX #3: Debug confirmation
+        Debug.Log("[FuelPickup] FUEL PICKED UP!");
+
         if (pickupSound) audioSource.PlayOneShot(pickupSound);
 
-        // Add fuel and cap at 100 (hard-coded max, same as everywhere else)
+        // Add fuel
         car.vruchtbaar += fuelToAdd;
-        car.vruchtbaar = Mathf.Clamp(car.vruchtbaar, 0f, 100f);
+        car.vruchtbaar = Mathf.Clamp(car.vruchtbaar, 0f, maxFuel);
 
         // Disappear
         var mr = GetComponent<MeshRenderer>();
         if (mr) mr.enabled = false;
         GetComponent<Collider>().enabled = false;
-
         Destroy(gameObject, pickupSound ? pickupSound.length : 0.3f);
     }
 }
