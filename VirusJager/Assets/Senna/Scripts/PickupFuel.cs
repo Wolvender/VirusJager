@@ -31,14 +31,13 @@ public class FuelPickup : MonoBehaviour
 
         alreadyUsed = true;
 
-        // Play sound
         if (pickupSound) audioSource.PlayOneShot(pickupSound);
 
-        // ADD FUEL AND CAP AT 100
+        // Add fuel and cap at 100 (hard-coded max, same as everywhere else)
         car.vruchtbaar += fuelToAdd;
-        car.vruchtbaar = Mathf.Clamp(car.vruchtbaar, 0f, maxFuel);   // ← This line caps it!
+        car.vruchtbaar = Mathf.Clamp(car.vruchtbaar, 0f, 100f);
 
-        // Visual disappear
+        // Disappear
         var mr = GetComponent<MeshRenderer>();
         if (mr) mr.enabled = false;
         GetComponent<Collider>().enabled = false;
